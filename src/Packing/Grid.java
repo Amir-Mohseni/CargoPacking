@@ -9,12 +9,19 @@ public class Grid {
     int[][][] grid;
     int numberOfEmptySpaces;
 
+    TreeSet <Cell> emptyCells = new TreeSet<>();
+
     Grid(int nX, int nY, int nZ) {
         this.nX = nX;
         this.nY = nY;
         this.nZ = nZ;
 
         numberOfEmptySpaces = nX * nY * nZ;
+
+        for (int i = 0; i < nX; i++)
+            for (int j = 0; j < nY; j++)
+                for(int k = 0; k < nZ; k++)
+                    emptyCells.add(new Cell(i, j, k));
 
         grid = new int[nX][nY][nZ];
     }
@@ -42,6 +49,7 @@ public class Grid {
                     if(volume[i][j][k] != 0) {
                         grid[i + x][j + y][k + z] = block.color;
                         numberOfEmptySpaces -= 1;
+                        emptyCells.remove(new Cell(i + x, j + y, k + z));
                     }
                 }
             }
