@@ -5,8 +5,13 @@ import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -22,42 +27,29 @@ public class JFX3D extends Application {
     private double anchorX, anchorY;
     private double anchorAngleX = 0, anchorAngleY = 0;
 
+
+    private final BorderPane bp = new BorderPane();
     private final RotatorGroup rg = new RotatorGroup();
     private Stage stage;
     private final int cubeLength = 30;
     private final int spacing = 0;
+    private String selectedAlgo;
 
     @Override
-    public void start(Stage primaryStage) throws InterruptedException {
+    public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        setup();
-
-//        int[][][] data = new int[33][5][8];
-//        Random randomNum = new Random();
-//
-//        for (int[][] dimX : data){
-//            for (int[] dimY : dimX){
-//                for (int dimZ = 0; dimZ < dimY.length; dimZ++){
-//                    dimY[dimZ] = randomNum.nextInt(2);
-//                }
-//            }
-//        }
-
-        int[][][] data = RandomSearch.randomSearch().grid;
-
-        draw3D(data);
+        this.setup();
+        this.setupUI();
     }
 
     private void setup(){
-        BorderPane bp = new BorderPane();
-
-        Scene mainScene = new Scene(bp, WIDTH, HEIGHT);
+        Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
 
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
 
-        SubScene scene = new SubScene(rg, WIDTH, HEIGHT, true, null);
+        SubScene scene = new SubScene(rg, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
 
-        bp.setCenter(scene);
+        this.bp.setCenter(scene);
 
         scene.setFill(Color.LIGHTGRAY);
         scene.setCamera(perspectiveCamera);
@@ -118,7 +110,53 @@ public class JFX3D extends Application {
         stage.setOnCloseRequest(t -> System.exit(0));
     }
 
-    private void draw3D(int[][][] data) throws InterruptedException {
+    private void setupUI(){
+        VBox leftPane = new VBox();
+        Button startButton = new Button("Start");
+        Button resetButton = new Button("Reset");
+        Label label1 = new Label("Controls for visualization");
+        leftPane.getChildren().addAll(label1);
+
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+        RadioButton randomButton = new RadioButton("Random");
+        RadioButton greedyButton = new RadioButton("Greedy");
+        RadioButton algoXButton = new RadioButton("Algo X");
+
+        randomButton.setToggleGroup(toggleGroup);
+        greedyButton.setToggleGroup(toggleGroup);
+        algoXButton.setToggleGroup(toggleGroup);
+
+        leftPane.getChildren().addAll(randomButton,greedyButton,algoXButton);
+        leftPane.getChildren().addAll(startButton,resetButton);
+
+        startButton.setOnAction(e ->{
+            if(randomButton.isSelected()){
+                int[][][] data = RandomSearch.randomSearch().grid;
+                this.draw3D(data);
+            }
+
+            if(greedyButton.isSelected()){
+                selectedAlgo = "Greedy";
+            }
+
+            if(algoXButton.isSelected()){
+                selectedAlgo = "Algo X";
+            }
+
+            if(selectedAlgo == null){
+                System.out.println("No option has been selected");
+            }
+
+        });
+
+        resetButton.setOnAction(e -> {
+
+        });
+
+        this.bp.setLeft(leftPane);
+    }
+    private void draw3D(int[][][] data) {
         int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
         int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
 
