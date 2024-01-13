@@ -5,7 +5,7 @@ public class RandomSearch {
     static Grid grid = new Grid(33, 5, 8);
     static Database database = new Database();
 
-    static void randomSearch() {
+    static Grid randomSearch() {
         int numberOfIterations = 1000000;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
@@ -37,6 +37,7 @@ public class RandomSearch {
             if (!foundPlacement)
                 break;
         }
+        return grid;
     }
 
     static int generateRandomNumber(int upperbound) { //From 0 to upperbound - 1
