@@ -2,10 +2,10 @@ package Packing;
 import java.util.Random;
 
 public class RandomSearch {
-    static Grid grid = new Grid(33, 5, 8);
+    public static Grid grid = new Grid(33, 5, 8);
     static Database database = new Database();
 
-    static Grid randomSearch() {
+    public static Grid randomSearch() {
         int numberOfIterations = 1000000;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
