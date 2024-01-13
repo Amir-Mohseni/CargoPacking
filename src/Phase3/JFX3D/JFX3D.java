@@ -24,7 +24,7 @@ public class JFX3D extends Application {
     private final RotatorGroup rg = new RotatorGroup();
     private Stage stage;
     private final int cubeLength = 30;
-    private final int spacing = 1;
+    private final int spacing = 0;
 
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
