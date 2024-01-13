@@ -16,16 +16,25 @@ import javafx.stage.WindowEvent;
 
 public class JFX3D extends Application {
     public static final int WIDTH = 800, HEIGHT = 600;
-
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
     private double anchorAngleX = 0, anchorAngleY = 0;
 
+    private final RotatorGroup rg = new RotatorGroup();
+    private Stage stage;
+    private final int cubeLength = 30;
+    private final int spacing = 1;
+
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws InterruptedException {
+        this.stage = primaryStage;
+        setup();
+        draw3D(new int[33][5][8]);
+    }
+
+    private void setup(){
         BorderPane bp = new BorderPane();
-        RotatorGroup rg = new RotatorGroup();
 
         Scene mainScene = new Scene(bp, WIDTH, HEIGHT);
 
@@ -40,27 +49,44 @@ public class JFX3D extends Application {
 
         perspectiveCamera.translateXProperty().set(0);
         perspectiveCamera.translateYProperty().set(0);
-        perspectiveCamera.translateZProperty().set(-3000);
+        perspectiveCamera.translateZProperty().set(-4000);
         perspectiveCamera.setNearClip(1);
         perspectiveCamera.setFarClip(100000);
 
-        initMouseControl(rg, scene, primaryStage);
+        initMouseControl(this.rg, scene, stage);
 
-        Box newBox = new Box();
-        newBox.setWidth(150);
-        newBox.setHeight(150);
-        newBox.setDepth(150);
+        stage.setTitle("Project 1 phase 3");
+        stage.setScene(mainScene);
+        stage.show();
+        stage.setOnCloseRequest(t -> System.exit(0));
+    }
 
-        rg.getChildren().add(newBox);
+    private void draw3D(int[][][] data) throws InterruptedException {
+        int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
+        int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
 
-        primaryStage.setTitle("Project 1 phase 3");
-        primaryStage.setScene(mainScene);
-        primaryStage.show();
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override public void handle(WindowEvent t) {
-                System.exit(0);
+        for (int dimX = 0; dimX < data.length; dimX++){
+            for (int dimY = 0; dimY < data[dimX].length; dimY++){
+                for (int dimZ = 0; dimZ < data[dimX][dimY].length; dimZ++){
+                    Box newBox = new Box();
+                    newBox.setWidth(cubeLength);
+                    newBox.setHeight(cubeLength);
+                    newBox.setDepth(cubeLength);
+
+                    int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
+                    int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
+                    int transZ = ((-1 * midZ + dimZ) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midZ + dimZ));
+
+                    newBox.setTranslateX(transX);
+                    newBox.setTranslateY(transY);
+                    newBox.setTranslateZ(transZ);
+
+                    this.rg.getChildren().add(newBox);
+                }
             }
-        });
+        }
+
+
 
     }
 
