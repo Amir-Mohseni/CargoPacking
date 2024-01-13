@@ -203,14 +203,12 @@ public class JFX3D extends Application {
         String color = this.colorMap.get(id);
 
         if (color == null){
-            System.out.println(id + "new");
             Random random = new Random();
             int R = random.nextInt(255), G = random.nextInt(255), B = random.nextInt(255);
             color = "#" + leftPad(Integer.toHexString(R)) + leftPad(Integer.toHexString(G)) + leftPad(Integer.toHexString(B));
             colorMap.put(id, color);
             return color;
         } else {
-            System.out.println(id + "old");
             return color;
         }
 
