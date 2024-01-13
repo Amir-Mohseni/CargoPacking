@@ -4,6 +4,7 @@ import Packing.RandomSearch;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +15,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
@@ -115,10 +118,19 @@ public class JFX3D extends Application {
 
     private void setupUI(){
         VBox leftPane = new VBox();
+        leftPane.setSpacing(25);
+        leftPane.setAlignment(Pos.CENTER);
+
         Button startButton = new Button("Start");
+        startButton.setPrefSize(80,40);
         Button resetButton = new Button("Reset");
+        resetButton.setPrefSize(80,40);
+
         Label label1 = new Label("Controls for visualization");
-        leftPane.getChildren().addAll(label1);
+        label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
+        Label label2 = new Label("Select an Algorithm: ");
+        label2.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        leftPane.getChildren().addAll(label1, label2);
 
 
         ToggleGroup toggleGroup = new ToggleGroup();
@@ -152,7 +164,7 @@ public class JFX3D extends Application {
             }
 
         });
-
+        //Action listener for the reset button: Functionality to be added at a later time.
         resetButton.setOnAction(e -> {
 
         });
