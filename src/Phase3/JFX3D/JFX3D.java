@@ -24,7 +24,7 @@ public class JFX3D extends Application {
     private final RotatorGroup rg = new RotatorGroup();
     private Stage stage;
     private final int cubeLength = 30;
-    private final int spacing = 0;
+    private final int spacing = 1;
 
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
@@ -65,6 +65,48 @@ public class JFX3D extends Application {
         perspectiveCamera.setNearClip(1);
         perspectiveCamera.setFarClip(100000);
 
+        PointLight pointLight1 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight1.setTranslateX(1000);
+        pointLight1.setTranslateY(0);
+        pointLight1.setTranslateZ(0);
+        this.rg.getChildren().add(pointLight1);
+
+        PointLight pointLight2 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight2.setTranslateX(-1000);
+        pointLight2.setTranslateY(0);
+        pointLight2.setTranslateZ(0);
+        this.rg.getChildren().add(pointLight2);
+
+        PointLight pointLight3 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight3.setTranslateX(0);
+        pointLight3.setTranslateY(1000);
+        pointLight3.setTranslateZ(0);
+        this.rg.getChildren().add(pointLight3);
+
+        PointLight pointLight4 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight4.setTranslateX(0);
+        pointLight4.setTranslateY(-1000);
+        pointLight4.setTranslateZ(0);
+        this.rg.getChildren().add(pointLight4);
+
+        PointLight pointLight5 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight5.setTranslateX(0);
+        pointLight5.setTranslateY(0);
+        pointLight5.setTranslateZ(1000);
+        this.rg.getChildren().add(pointLight5);
+
+        PointLight pointLight6 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight6.setTranslateX(0);
+        pointLight6.setTranslateY(0);
+        pointLight6.setTranslateZ(-1000);
+        this.rg.getChildren().add(pointLight6);
+
         initMouseControl(this.rg, scene, stage);
 
         stage.setTitle("Project 1 phase 3");
@@ -85,9 +127,19 @@ public class JFX3D extends Application {
                     }
 
                     Box newBox = new Box();
+
                     newBox.setWidth(cubeLength);
                     newBox.setHeight(cubeLength);
                     newBox.setDepth(cubeLength);
+
+                    String hexColor = randomHexColor();
+                    try{
+                        PhongMaterial material = new PhongMaterial();
+                        material.setDiffuseColor(Color.web(hexColor, 0.1));
+                        newBox.setMaterial(material);
+                    } catch (Exception e){
+                        System.out.println(hexColor);
+                    }
 
                     int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
                     int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
@@ -104,6 +156,17 @@ public class JFX3D extends Application {
 
 
 
+    }
+
+    private String randomHexColor(){
+        Random random = new Random();
+        int R = random.nextInt(255), G = random.nextInt(255), B = random.nextInt(255);
+        return "#" + leftPad(Integer.toHexString(R)) + leftPad(Integer.toHexString(G)) + leftPad(Integer.toHexString(B));
+
+    }
+
+    private String leftPad(String s){
+        return "0".repeat((2 - s.length())) + s;
     }
 
     class RotatorGroup extends Group {
