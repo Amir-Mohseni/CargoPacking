@@ -7,6 +7,7 @@ public class RandomSearch {
 
     public static Grid randomSearch() {
         int numberOfIterations = 1000000;
+        int count = 1;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
@@ -25,7 +26,7 @@ public class RandomSearch {
                 int z = emptyCell.z;
 
                 if (grid.validPlacement(x, y, z, database.blockArrayList.get(blockIndex))) {
-                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex));
+                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex), count++);
                     foundPlacement = true;
                     break;
                 }

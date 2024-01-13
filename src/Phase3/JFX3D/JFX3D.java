@@ -18,6 +18,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class JFX3D extends Application {
@@ -34,6 +36,7 @@ public class JFX3D extends Application {
     private final int cubeLength = 30;
     private final int spacing = 0;
     private String selectedAlgo;
+    private Map<Integer, String> colorMap = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -163,7 +166,8 @@ public class JFX3D extends Application {
         for (int dimX = 0; dimX < data.length; dimX++){
             for (int dimY = 0; dimY < data[dimX].length; dimY++){
                 for (int dimZ = 0; dimZ < data[dimX][dimY].length; dimZ++){
-                    if (data[dimX][dimY][dimZ] == 0){
+                    int id = data[dimX][dimY][dimZ];
+                    if (id  == 0){
                         continue;
                     }
 
@@ -173,10 +177,10 @@ public class JFX3D extends Application {
                     newBox.setHeight(cubeLength);
                     newBox.setDepth(cubeLength);
 
-//                    String hexColor = randomHexColor();
-//                    PhongMaterial material = new PhongMaterial();
-//                    material.setDiffuseColor(Color.web(hexColor, 0.1));
-//                    newBox.setMaterial(material);
+                    String hexColor = getHexColor(id);
+                    PhongMaterial material = new PhongMaterial();
+                    material.setDiffuseColor(Color.web(hexColor, 1));
+                    newBox.setMaterial(material);
 
                     int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
                     int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
@@ -195,10 +199,20 @@ public class JFX3D extends Application {
 
     }
 
-    private String randomHexColor(){
-        Random random = new Random();
-        int R = random.nextInt(255), G = random.nextInt(255), B = random.nextInt(255);
-        return "#" + leftPad(Integer.toHexString(R)) + leftPad(Integer.toHexString(G)) + leftPad(Integer.toHexString(B));
+    private String getHexColor(Integer id){
+        String color = this.colorMap.get(id);
+
+        if (color == null){
+            System.out.println(id + "new");
+            Random random = new Random();
+            int R = random.nextInt(255), G = random.nextInt(255), B = random.nextInt(255);
+            color = "#" + leftPad(Integer.toHexString(R)) + leftPad(Integer.toHexString(G)) + leftPad(Integer.toHexString(B));
+            colorMap.put(id, color);
+            return color;
+        } else {
+            System.out.println(id + "old");
+            return color;
+        }
 
     }
 
