@@ -6,7 +6,7 @@ public class Grid {
     int nX;
     int nY;
     int nZ;
-    int[][][] grid;
+    public int[][][] grid;
     int numberOfEmptySpaces;
 
     TreeSet <Cell> emptyCells = new TreeSet<>();

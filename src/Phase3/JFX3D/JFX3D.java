@@ -1,5 +1,6 @@
 package Phase3.JFX3D;
 
+import Packing.RandomSearch;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -24,23 +25,25 @@ public class JFX3D extends Application {
     private final RotatorGroup rg = new RotatorGroup();
     private Stage stage;
     private final int cubeLength = 30;
-    private final int spacing = 1;
+    private final int spacing = 0;
 
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         this.stage = primaryStage;
         setup();
 
-        int[][][] data = new int[33][5][8];
-        Random randomNum = new Random();
+//        int[][][] data = new int[33][5][8];
+//        Random randomNum = new Random();
+//
+//        for (int[][] dimX : data){
+//            for (int[] dimY : dimX){
+//                for (int dimZ = 0; dimZ < dimY.length; dimZ++){
+//                    dimY[dimZ] = randomNum.nextInt(2);
+//                }
+//            }
+//        }
 
-        for (int[][] dimX : data){
-            for (int[] dimY : dimX){
-                for (int dimZ = 0; dimZ < dimY.length; dimZ++){
-                    dimY[dimZ] = randomNum.nextInt(2);
-                }
-            }
-        }
+        int[][][] data = RandomSearch.randomSearch().grid;
 
         draw3D(data);
     }
@@ -65,47 +68,47 @@ public class JFX3D extends Application {
         perspectiveCamera.setNearClip(1);
         perspectiveCamera.setFarClip(100000);
 
-        PointLight pointLight1 = new PointLight();
-//        pointLight.setColor(Color.RED);
-        pointLight1.setTranslateX(1000);
-        pointLight1.setTranslateY(0);
-        pointLight1.setTranslateZ(0);
-        this.rg.getChildren().add(pointLight1);
-
-        PointLight pointLight2 = new PointLight();
-//        pointLight.setColor(Color.RED);
-        pointLight2.setTranslateX(-1000);
-        pointLight2.setTranslateY(0);
-        pointLight2.setTranslateZ(0);
-        this.rg.getChildren().add(pointLight2);
-
-        PointLight pointLight3 = new PointLight();
-//        pointLight.setColor(Color.RED);
-        pointLight3.setTranslateX(0);
-        pointLight3.setTranslateY(1000);
-        pointLight3.setTranslateZ(0);
-        this.rg.getChildren().add(pointLight3);
-
-        PointLight pointLight4 = new PointLight();
-//        pointLight.setColor(Color.RED);
-        pointLight4.setTranslateX(0);
-        pointLight4.setTranslateY(-1000);
-        pointLight4.setTranslateZ(0);
-        this.rg.getChildren().add(pointLight4);
-
-        PointLight pointLight5 = new PointLight();
-//        pointLight.setColor(Color.RED);
-        pointLight5.setTranslateX(0);
-        pointLight5.setTranslateY(0);
-        pointLight5.setTranslateZ(1000);
-        this.rg.getChildren().add(pointLight5);
-
-        PointLight pointLight6 = new PointLight();
-//        pointLight.setColor(Color.RED);
-        pointLight6.setTranslateX(0);
-        pointLight6.setTranslateY(0);
-        pointLight6.setTranslateZ(-1000);
-        this.rg.getChildren().add(pointLight6);
+//        PointLight pointLight1 = new PointLight();
+////        pointLight.setColor(Color.RED);
+//        pointLight1.setTranslateX(1000);
+//        pointLight1.setTranslateY(0);
+//        pointLight1.setTranslateZ(0);
+//        this.rg.getChildren().add(pointLight1);
+//
+//        PointLight pointLight2 = new PointLight();
+////        pointLight.setColor(Color.RED);
+//        pointLight2.setTranslateX(-1000);
+//        pointLight2.setTranslateY(0);
+//        pointLight2.setTranslateZ(0);
+//        this.rg.getChildren().add(pointLight2);
+//
+//        PointLight pointLight3 = new PointLight();
+////        pointLight.setColor(Color.RED);
+//        pointLight3.setTranslateX(0);
+//        pointLight3.setTranslateY(1000);
+//        pointLight3.setTranslateZ(0);
+//        this.rg.getChildren().add(pointLight3);
+//
+//        PointLight pointLight4 = new PointLight();
+////        pointLight.setColor(Color.RED);
+//        pointLight4.setTranslateX(0);
+//        pointLight4.setTranslateY(-1000);
+//        pointLight4.setTranslateZ(0);
+//        this.rg.getChildren().add(pointLight4);
+//
+//        PointLight pointLight5 = new PointLight();
+////        pointLight.setColor(Color.RED);
+//        pointLight5.setTranslateX(0);
+//        pointLight5.setTranslateY(0);
+//        pointLight5.setTranslateZ(1000);
+//        this.rg.getChildren().add(pointLight5);
+//
+//        PointLight pointLight6 = new PointLight();
+////        pointLight.setColor(Color.RED);
+//        pointLight6.setTranslateX(0);
+//        pointLight6.setTranslateY(0);
+//        pointLight6.setTranslateZ(-1000);
+//        this.rg.getChildren().add(pointLight6);
 
         initMouseControl(this.rg, scene, stage);
 
@@ -132,14 +135,10 @@ public class JFX3D extends Application {
                     newBox.setHeight(cubeLength);
                     newBox.setDepth(cubeLength);
 
-                    String hexColor = randomHexColor();
-                    try{
-                        PhongMaterial material = new PhongMaterial();
-                        material.setDiffuseColor(Color.web(hexColor, 0.1));
-                        newBox.setMaterial(material);
-                    } catch (Exception e){
-                        System.out.println(hexColor);
-                    }
+//                    String hexColor = randomHexColor();
+//                    PhongMaterial material = new PhongMaterial();
+//                    material.setDiffuseColor(Color.web(hexColor, 0.1));
+//                    newBox.setMaterial(material);
 
                     int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
                     int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
