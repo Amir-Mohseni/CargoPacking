@@ -3,7 +3,6 @@ package Phase3.JFX3D;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.EventHandler;
 import javafx.scene.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -12,10 +11,11 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+
+import java.util.Random;
 
 public class JFX3D extends Application {
-    public static final int WIDTH = 800, HEIGHT = 600;
+    public static final int WIDTH = 1280, HEIGHT = 720;
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
@@ -30,7 +30,19 @@ public class JFX3D extends Application {
     public void start(Stage primaryStage) throws InterruptedException {
         this.stage = primaryStage;
         setup();
-        draw3D(new int[33][5][8]);
+
+        int[][][] data = new int[33][5][8];
+        Random randomNum = new Random();
+
+        for (int[][] dimX : data){
+            for (int[] dimY : dimX){
+                for (int dimZ = 0; dimZ < dimY.length; dimZ++){
+                    dimY[dimZ] = randomNum.nextInt(2);
+                }
+            }
+        }
+
+        draw3D(data);
     }
 
     private void setup(){
@@ -68,6 +80,10 @@ public class JFX3D extends Application {
         for (int dimX = 0; dimX < data.length; dimX++){
             for (int dimY = 0; dimY < data[dimX].length; dimY++){
                 for (int dimZ = 0; dimZ < data[dimX][dimY].length; dimZ++){
+                    if (data[dimX][dimY][dimZ] == 0){
+                        continue;
+                    }
+
                     Box newBox = new Box();
                     newBox.setWidth(cubeLength);
                     newBox.setHeight(cubeLength);
