@@ -64,16 +64,16 @@ public class JFX3D extends Application {
 
         perspectiveCamera.translateXProperty().set(0);
         perspectiveCamera.translateYProperty().set(0);
-        perspectiveCamera.translateZProperty().set(-4000);
+        perspectiveCamera.translateZProperty().set(-1500);
         perspectiveCamera.setNearClip(1);
         perspectiveCamera.setFarClip(100000);
 
-//        PointLight pointLight1 = new PointLight();
-////        pointLight.setColor(Color.RED);
-//        pointLight1.setTranslateX(1000);
-//        pointLight1.setTranslateY(0);
-//        pointLight1.setTranslateZ(0);
-//        this.rg.getChildren().add(pointLight1);
+        PointLight pointLight1 = new PointLight();
+//        pointLight.setColor(Color.RED);
+        pointLight1.setTranslateX(-1000);
+        pointLight1.setTranslateY(-1000);
+        pointLight1.setTranslateZ(-1000);
+        this.rg.getChildren().add(pointLight1);
 //
 //        PointLight pointLight2 = new PointLight();
 ////        pointLight.setColor(Color.RED);
