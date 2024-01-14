@@ -1,11 +1,13 @@
 package Packing;
+import Phase3.JFX3D.Renderable;
+
 import java.util.Random;
 
-public class RandomSearch {
-    public static Grid grid = new Grid(33, 5, 8);
-    static Database database = new Database();
+public class RandomSearch implements Renderable {
+    public Grid grid = new Grid(33, 5, 8);
+    Database database = new Database();
 
-    public static Grid randomSearch() {
+    public Grid randomSearch() {
         int numberOfIterations = 1000000;
         int count = 1;
 
@@ -41,12 +43,14 @@ public class RandomSearch {
         return grid;
     }
 
-    static int generateRandomNumber(int upperbound) { //From 0 to upperbound - 1
+    int generateRandomNumber(int upperbound) { //From 0 to upperbound - 1
         Random rand = new Random();
         return rand.nextInt(upperbound);
     }
 
-    public static void main(String[] args) {
-        randomSearch();
+    @Override
+    public int[][][] getData(){
+        return randomSearch().grid;
     }
+
 }

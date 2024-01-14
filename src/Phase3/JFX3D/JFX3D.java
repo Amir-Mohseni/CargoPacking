@@ -135,8 +135,7 @@ public class JFX3D extends Application {
 
         startButton.setOnAction(e ->{
             if(randomButton.isSelected()){
-                int[][][] data = RandomSearch.randomSearch().grid;
-                this.draw3D(data);
+                this.render(new RandomSearch());
             }
 
             if(greedyButton.isSelected()){
@@ -159,6 +158,11 @@ public class JFX3D extends Application {
 
         this.bp.setLeft(leftPane);
     }
+
+    private void render(Renderable renderable){
+        this.draw3D(renderable.getData());
+    }
+
     private void draw3D(int[][][] data) {
         int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
         int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
