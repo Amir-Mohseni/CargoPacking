@@ -37,8 +37,10 @@ public class JFX3D extends Application {
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private String selectedAlgo;
+    private String selectedFilling;
     private final Map<Integer, String> colorMap = new HashMap<>();
-    private double scrollBarPositionX, scrollBarPositionY, scrollBarPositionZ;
+    private int value1, value2, value3;
+    private int quantity1, quantity2, quantity3;
 
     @Override
     public void start(Stage primaryStage) {
@@ -81,7 +83,6 @@ public class JFX3D extends Application {
         Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
         stage.setScene(mainScene);
 
-
         VBox leftPane = new VBox();
         leftPane.setSpacing(20);
         leftPane.setAlignment(Pos.CENTER);
@@ -91,51 +92,57 @@ public class JFX3D extends Application {
         Button resetButton = new Button("Reset");
         resetButton.setPrefSize(80,40);
 
-        Label label1 = new Label("Controls for visualization");
+        Label label1 = new Label("3D PACKING SOLVER");
         label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        Label label2 = new Label("Select an Algorithm: ");
-        label2.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        leftPane.getChildren().addAll(label1, label2);
+        leftPane.getChildren().add(label1);
+
+        Menu algorithmMenu = new Menu("Algorithms");
+        MenuItem random = new MenuItem("Random");
+        MenuItem greedy = new MenuItem("Greedy");
+        MenuItem algoX = new MenuItem("Algorithm X");
+
+        random.setOnAction(e->{selectedAlgo = "Random";});
+        greedy.setOnAction(e->{selectedAlgo = "Random";});
+        algoX.setOnAction(e->{selectedAlgo = "Algo X";});
+
+        algorithmMenu.getItems().addAll(random,greedy,algoX);
+
+        MenuBar menuBar1 = new MenuBar();
+        menuBar1.getMenus().add(algorithmMenu);
+        leftPane.getChildren().add(menuBar1);
+
+        Menu typeOfFilling = new Menu("Type of filling");
+        MenuItem pentominoes = new MenuItem("Pentominoes");
+        MenuItem cubes = new MenuItem("Cubes");
+
+        pentominoes.setOnAction(e->{selectedFilling = "Pentominoes";});
+        cubes.setOnAction(e->{selectedFilling = "Cubes";});
+
+        typeOfFilling.getItems().addAll(pentominoes,cubes);
+
+        MenuBar menuBar2 = new MenuBar();
+        menuBar2.getMenus().add(typeOfFilling);
+        leftPane.getChildren().add(menuBar2);
 
 
-        ToggleGroup toggleGroup = new ToggleGroup();
-        RadioButton randomButton = new RadioButton("Random");
-        RadioButton greedyButton = new RadioButton("Greedy");
-        RadioButton algoXButton = new RadioButton("Algo X");
+        Label valuesLabel = new Label("Values");
+        valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
+        TextField valueText1 = new TextField();
+        TextField valueText2 = new TextField();
+        TextField valueText3 = new TextField();
 
-        randomButton.setToggleGroup(toggleGroup);
-        greedyButton.setToggleGroup(toggleGroup);
-        algoXButton.setToggleGroup(toggleGroup);
+        Label quantityLabel = new Label("Quantity");
+        quantityLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
+        TextField quantityText1 = new TextField();
+        TextField quantityText2 = new TextField();
+        TextField quantityText3 = new TextField();
 
-        leftPane.getChildren().addAll(randomButton,greedyButton,algoXButton);
+        leftPane.getChildren().addAll(valuesLabel,valueText1,valueText2,valueText3);
+        leftPane.getChildren().addAll(quantityLabel,quantityText1,quantityText2,quantityText3);
+
+
         leftPane.getChildren().addAll(startButton,resetButton);
 
-        ScrollBar scrollBarX = new ScrollBar();
-        scrollBarX.setMin(0);
-        scrollBarX.setMax(200);
-        scrollBarX.setUnitIncrement(10);
-        scrollBarX.setBlockIncrement(10);
-
-        ScrollBar scrollBarY = new ScrollBar();
-        scrollBarY.setMin(0);
-        scrollBarY.setMax(200);
-        scrollBarY.setUnitIncrement(10);
-        scrollBarY.setBlockIncrement(10);
-
-        ScrollBar scrollBarZ = new ScrollBar();
-        scrollBarZ.setMin(0);
-        scrollBarZ.setMax(200);
-        scrollBarZ.setUnitIncrement(10);
-        scrollBarZ.setBlockIncrement(10);
-
-        Label label3 = new Label("X Axis:");
-        label3.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label label4 = new Label("Y Axis:");
-        label4.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label label5 = new Label("Z Axis:");
-        label5.setFont(Font.font("Arial", FontWeight.BOLD, 12));
-
-        leftPane.getChildren().addAll(label3, scrollBarX, label4, scrollBarY, label5, scrollBarZ);
 
         Label label6 = new Label("Scoring table:");
         label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
@@ -144,37 +151,52 @@ public class JFX3D extends Application {
         leftPane.getChildren().addAll(label6,scoreLabel);
 
         startButton.setOnAction(e ->{
-            if(randomButton.isSelected()){
-                selectedAlgo = "Random";
+            if(selectedAlgo.equals("Random")){
+                System.out.println(selectedAlgo);
                 this.render(new RandomSearch());
             }
-
-            if(greedyButton.isSelected()){
-                selectedAlgo = "Greedy";
+            if(selectedAlgo.equals("Greedy")){
+                System.out.println(selectedAlgo);
             }
-
-            if(algoXButton.isSelected()){
-                selectedAlgo = "Algo X";
+            if(selectedAlgo.equals("Algo X")){
+                System.out.println(selectedAlgo);
             }
-
             if(selectedAlgo == null){
                 System.out.println("No option has been selected");
             }
 
+            //For retrieving the input from the TextFields for values
+
+            String valuesText1 = valueText1.getText();
+            String valuesText2 = valueText2.getText();
+            String valuesText3 = valueText3.getText();
+
+            if(!valuesText1.isEmpty() && !valuesText2.isEmpty() && !valuesText3.isEmpty()){
+                value1 = Integer.parseInt(valuesText1);
+                value2 = Integer.parseInt(valuesText2);
+                value3 = Integer.parseInt(valuesText3);
+                System.out.println("Values: "+value1+", "+value2+", "+value3);
+            } else {
+                System.out.println("Values not entered");
+            }
+
+            //For retrieving the input from Quantity TextFields
+
+            String quantityString1 = quantityText1.getText();
+            String quantityString2 = quantityText2.getText();
+            String quantityString3 = quantityText3.getText();
+
+            if(!quantityString1.isEmpty() && !quantityString2.isEmpty() && !quantityString3.isEmpty()){
+                quantity1 = Integer.parseInt(quantityString1);
+                quantity2 = Integer.parseInt(quantityString2);
+                quantity3 = Integer.parseInt(quantityString3);
+                System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
+            } else{
+                System.out.println("Quantities not entered");
+            }
+
         });
         resetButton.setOnAction(e -> this.setupRender());
-        scrollBarX.valueProperty().addListener((observable,oldValue,newValue)->{
-            scrollBarPositionX = scrollBarX.getValue(); //Values for the current position
-            System.out.println("ScrollBarX's current position:"+newValue); //To print into the console the current position
-        });
-        scrollBarY.valueProperty().addListener((observable,oldValue,newValue)->{
-            scrollBarPositionY = scrollBarY.getValue();
-            System.out.println("ScrollBarY's current position:"+newValue);
-        });
-        scrollBarZ.valueProperty().addListener((observable,oldValue,newValue)->{
-            scrollBarPositionZ = scrollBarZ.getValue();
-            System.out.println("ScrollBarZ's current position:"+newValue);
-        });
         this.bp.setLeft(leftPane);
     }
 
