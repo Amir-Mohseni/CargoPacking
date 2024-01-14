@@ -43,7 +43,7 @@ public class RandomSearch implements Renderable {
         return grid;
     }
 
-    int generateRandomNumber(int upperbound) { //From 0 to upperbound - 1
+    private int generateRandomNumber(int upperbound) { //From 0 to upperbound - 1
         Random rand = new Random();
         return rand.nextInt(upperbound);
     }

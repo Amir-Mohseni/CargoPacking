@@ -24,9 +24,10 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class JFX3D extends Application {
-    public static final int WIDTH = 1280, HEIGHT = 720;
+    public static final int WIDTH = Settings.Window.WINDOW_WIDTH, HEIGHT = Settings.Window.WINDOW_HEIGHT;
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
@@ -36,8 +37,8 @@ public class JFX3D extends Application {
     private final BorderPane bp = new BorderPane();
     private RotatorGroup rg = new RotatorGroup();
     private Stage stage;
-    private final int cubeLength = 30;
-    private final int spacing = 0;
+    private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
+    private final int spacing = Settings.Cubes.CUBE_SPACING;
     private String selectedAlgo;
     private final Map<Integer, String> colorMap = new HashMap<>();
 
@@ -56,17 +57,17 @@ public class JFX3D extends Application {
 
         this.bp.setCenter(scene);
 
-        scene.setFill(Color.WHITE);
+        scene.setFill(Settings.Window.BACKGROUND_COLOR);
         scene.setCamera(perspectiveCamera);
 
-        perspectiveCamera.translateXProperty().set(0);
-        perspectiveCamera.translateYProperty().set(0);
-        perspectiveCamera.translateZProperty().set(-1500);
-        perspectiveCamera.setNearClip(1);
-        perspectiveCamera.setFarClip(100000);
+        perspectiveCamera.translateXProperty().set(Settings.Camera.OFFSET_X);
+        perspectiveCamera.translateYProperty().set(Settings.Camera.OFFSET_Y);
+        perspectiveCamera.translateZProperty().set(Settings.Camera.OFFSET_Z);
+        perspectiveCamera.setNearClip(Settings.Camera.NEAR_CLIP);
+        perspectiveCamera.setFarClip(Settings.Camera.FAR_CLIP);
 
         PointLight pointLight1 = new PointLight();
-        pointLight1.setColor(Color.WHITE);
+        pointLight1.setColor(Settings.Window.LIGHT_COLOR);
         pointLight1.setTranslateX(-1000);
         pointLight1.setTranslateY(-1000);
         pointLight1.setTranslateZ(-1000);
