@@ -1,5 +1,6 @@
 package Phase3.JFX3D;
 
+import Packing.GreedySearch;
 import Packing.RandomSearch;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
@@ -129,6 +130,7 @@ public class JFX3D extends Application {
 
             if(greedyButton.isSelected()){
                 selectedAlgo = "Greedy";
+                this.render(new GreedySearch());
             }
 
             if(algoXButton.isSelected()){
