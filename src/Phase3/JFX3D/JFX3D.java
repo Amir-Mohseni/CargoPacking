@@ -6,10 +6,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -42,6 +39,7 @@ public class JFX3D extends Application {
     private String selectedAlgo;
 //    private final Map<Integer, String> colorMap = new HashMap<>();
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
+    private double scrollBarPosition;
 
     @Override
     public void start(Stage primaryStage) {
@@ -113,8 +111,19 @@ public class JFX3D extends Application {
         leftPane.getChildren().addAll(randomButton,greedyButton,algoXButton);
         leftPane.getChildren().addAll(startButton,resetButton);
 
+        ScrollBar scrollBar = new ScrollBar();
+        scrollBar.setMin(0);
+        scrollBar.setMax(200);
+        scrollBar.setUnitIncrement(10);
+        scrollBar.setBlockIncrement(10);
+        Label label3 = new Label("Adjust separation:");
+        label3.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        leftPane.getChildren().addAll(label3,scrollBar);
+
+
         startButton.setOnAction(e ->{
             if(randomButton.isSelected()){
+                selectedAlgo = "Random";
                 this.render(new RandomSearch());
             }
 
@@ -131,9 +140,11 @@ public class JFX3D extends Application {
             }
 
         });
-        //Action listener for the reset button: Functionality to be added at a later time.
         resetButton.setOnAction(e -> this.setupRender());
-
+        scrollBar.valueProperty().addListener((observable,oldValue,newValue)->{
+            scrollBarPosition = scrollBar.getValue(); //Values for the current position
+            System.out.println("ScrollBar's current position:"+newValue); //To print into the console the current position
+        });
         this.bp.setLeft(leftPane);
     }
 
