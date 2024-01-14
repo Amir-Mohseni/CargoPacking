@@ -28,7 +28,7 @@ public class RandomSearch implements Renderable {
                 int z = emptyCell.z;
 
                 if (grid.validPlacement(x, y, z, database.blockArrayList.get(blockIndex))) {
-                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex), count++);
+                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex));
                     foundPlacement = true;
                     break;
                 }
@@ -51,6 +51,11 @@ public class RandomSearch implements Renderable {
     @Override
     public int[][][] getData(){
         return randomSearch().grid;
+    }
+
+    @Override
+    public int getScore() {
+        return 0;
     }
 
 }
