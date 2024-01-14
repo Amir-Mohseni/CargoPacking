@@ -3,7 +3,7 @@ package Packing;
 import java.util.Arrays;
 import java.util.TreeMap;
 
-public class Block {
+public class Block implements Unit{
     int[][][] volume;
     int value;
     int color;
@@ -15,5 +15,15 @@ public class Block {
 
         for (int[][] row : this.volume)
             for (int[] anInt : row) Arrays.fill(anInt, 1);
+    }
+
+    @Override
+    public int[][][] getVolume() {
+        return this.volume;
+    }
+
+    @Override
+    public int getColor() {
+        return this.color;
     }
 }

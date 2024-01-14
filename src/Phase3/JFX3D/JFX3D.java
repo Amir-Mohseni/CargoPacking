@@ -1,7 +1,6 @@
 package Phase3.JFX3D;
 
-import Packing.GreedySearch;
-import Packing.RandomSearch;
+import Packing.*;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -19,10 +18,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 public class JFX3D extends Application {
     public static final int WIDTH = Settings.Window.WINDOW_WIDTH, HEIGHT = Settings.Window.WINDOW_HEIGHT;
@@ -125,12 +122,12 @@ public class JFX3D extends Application {
         startButton.setOnAction(e ->{
             if(randomButton.isSelected()){
                 selectedAlgo = "Random";
-                this.render(new RandomSearch());
+                this.render(new RandomSearch(), new PentominoDatabase());
             }
 
             if(greedyButton.isSelected()){
                 selectedAlgo = "Greedy";
-                this.render(new GreedySearch());
+                this.render(new GreedySearch(), new PentominoDatabase());
             }
 
             if(algoXButton.isSelected()){
@@ -150,9 +147,9 @@ public class JFX3D extends Application {
         this.bp.setLeft(leftPane);
     }
 
-    private void render(Renderable renderable){
+    private void render(Renderable renderable, UnitDatabase database){
         this.setupRender();
-        this.draw3D(renderable.getData());
+        this.draw3D(renderable.getData(database));
     }
 
     private void draw3D(int[][][] data) {

@@ -3,22 +3,21 @@ import Phase3.JFX3D.Renderable;
 
 public class GreedySearch implements Renderable {
     public Grid grid = new Grid(33, 5, 8);
-    Database database = new Database();
 
-    public Grid greedySearch() {
+    public Grid greedySearch(UnitDatabase database) {
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
         while(!grid.emptyCells.isEmpty()) {
             Cell emptyCell = grid.emptyCells.getFirst();
             grid.emptyCells.remove(emptyCell);
-            for (int blockIndex = 0; blockIndex < database.blockArrayList.size(); blockIndex++) {
+            for (int blockIndex = 0; blockIndex < database.getBlockArrayList().size(); blockIndex++) {
                 int x = emptyCell.x;
                 int y = emptyCell.y;
                 int z = emptyCell.z;
 
-                if (grid.validPlacement(x, y, z, database.blockArrayList.get(blockIndex))) {
-                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex));
+                if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(blockIndex))) {
+                    grid.placeBlock(x, y, z, database.getBlockArrayList().get(blockIndex));
                     break;
                 }
             }
@@ -28,8 +27,8 @@ public class GreedySearch implements Renderable {
     }
 
     @Override
-    public int[][][] getData(){
-        return greedySearch().grid;
+    public int[][][] getData(UnitDatabase database){
+        return greedySearch(database).grid;
     }
 
     @Override

@@ -3,15 +3,15 @@ package Packing;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Database {
+public class Database implements UnitDatabase {
     // 2 x 2 x 4
-    Block[] A;
+    Unit[] A;
     // 2 x 3 x 4
-    Block[] B;
+    Unit[] B;
     // 3 x 3 x 3
-    Block[] C;
-    ArrayList<Block> blockArrayList = new ArrayList<>();
-    Database() {
+    Unit[] C;
+    ArrayList<Unit> blockArrayList = new ArrayList<>();
+    public Database() {
         A = new Block[]{
                 new Block(2, 2, 4, 0, 1),
                 new Block(2, 4, 2, 0, 1),
@@ -34,5 +34,10 @@ public class Database {
         blockArrayList.addAll(Arrays.asList(A));
         blockArrayList.addAll(Arrays.asList(B));
         blockArrayList.addAll(Arrays.asList(C));
+    }
+
+    @Override
+    public ArrayList<Unit> getBlockArrayList() {
+        return this.blockArrayList;
     }
 }

@@ -1,7 +1,7 @@
 package Packing;
 
 // Object that holds all rotations of one parcel type
-public class Parcel {
+public class Parcel implements Unit{
 
     public Parcel(int[][][][] shape, int price, int space, int color){
         this(shape); 
@@ -44,6 +44,12 @@ public class Parcel {
     public int getDepth() { return depth;}
     public int getWidth() { return width;}
     public double getPrice() { return price; }
+
+    @Override
+    public int[][][] getVolume() {
+        return this.getParcelMatrix();
+    }
+
     public int getColor(){ return color_id;}
     public int getSpace(){ return space; }
     public int[][][] getParcelMatrix() { return parcel_matrix[position];}

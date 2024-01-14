@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 // Class that serves as a generator of all possible rotations of blocks L,P,T
-public class PentominoDatabase {
+public class PentominoDatabase implements UnitDatabase {
 
     static int[][][] l_piece = new int[2][4][1];
 
@@ -12,7 +12,7 @@ public class PentominoDatabase {
 
     static int[][][] t_piece = new int[3][3][1];
 
-    static{ // default shape matrices
+    public PentominoDatabase(){ // default shape matrices
 
         l_piece[0][0][0]= 1;
         l_piece[0][1][0]= 1;
@@ -34,14 +34,15 @@ public class PentominoDatabase {
 
         build_database();
     }
+
     // builds database of all Parcels, with given prices ordered descending
-    private static void build_database(){
+    private void build_database(){
 
         int[][][][] l = build_piece(l_piece);
         int[][][][] p = build_piece(p_piece);
         int[][][][] t = build_piece(t_piece);
 
-        database = new ArrayList<Parcel>(3);
+        database = new ArrayList<Unit>(3);
         database.add(new Parcel(t,5,5,1));
         database.add(new Parcel(p,4,5,2));
         database.add(new Parcel(l,3,5,3));
@@ -50,7 +51,7 @@ public class PentominoDatabase {
     }
 
     // returns true if this rotation is already included, so we remove identical rotation matrices
-    private static boolean arrayIncludes(ArrayList<int[][][]> p , int[][][] piece){
+    private boolean arrayIncludes(ArrayList<int[][][]> p , int[][][] piece){
 
         for(int[][][] perm : p){
             int x_len = perm.length, y_len  =perm[0].length, z_len = perm[0][0].length;
@@ -71,7 +72,7 @@ public class PentominoDatabase {
     }
 
     // clones 3D array
-    public static int[][][] clone_piece(int[][][] piece){
+    public int[][][] clone_piece(int[][][] piece){
 
         int[][][] clone = new int[piece.length][piece[0].length][piece[0][0].length];
         for(int x = 0; x != piece.length; ++x){
@@ -85,7 +86,7 @@ public class PentominoDatabase {
     }
 
     // takes one starting 3D matrix of a piece and generated array of all 3D rotations of that piece
-    public static int[][][][] build_piece(int[][][] piece){
+    public int[][][][] build_piece(int[][][] piece){
         ArrayList<int[][][]> permutations = new ArrayList<int[][][]>(24);
 
         // first four possible way how to face a cube/ 3D array
@@ -124,7 +125,7 @@ public class PentominoDatabase {
     }
     
     // rotates around X axis
-    private static int[][][] flipAxisX(int[][][] piece){
+    private int[][][] flipAxisX(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece.length][piece[0][0].length][piece[0].length];
 
@@ -139,7 +140,7 @@ public class PentominoDatabase {
         return rotated_piece;
     }
     //rotates around Y axis
-    private static int[][][] flipAxisY(int[][][] piece){
+    private int[][][] flipAxisY(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece[0][0].length][piece[0].length][piece.length];
 
@@ -154,7 +155,7 @@ public class PentominoDatabase {
     }
 
     // rotates around Z axis
-    private static int[][][] rotateAroundZ(int[][][] piece){
+    private int[][][] rotateAroundZ(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece[0].length][piece.length][piece[0][0].length];
 
@@ -168,6 +169,10 @@ public class PentominoDatabase {
         return rotated_piece;
     }
 
-    public static ArrayList<Parcel> database;
-    
+    public ArrayList<Unit> database;
+
+    @Override
+    public ArrayList<Unit> getBlockArrayList() {
+        return this.database;
+    }
 }

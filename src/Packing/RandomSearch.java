@@ -5,9 +5,8 @@ import java.util.Random;
 
 public class RandomSearch implements Renderable {
     public Grid grid = new Grid(33, 5, 8);
-    Database database = new Database();
 
-    public Grid randomSearch() {
+    public Grid randomSearch(UnitDatabase database) {
         int numberOfIterations = 1000000;
         int count = 1;
 
@@ -21,14 +20,14 @@ public class RandomSearch implements Renderable {
             boolean foundPlacement = false;
 
             for (Cell emptyCell : grid.emptyCells) {
-                int blockIndex = generateRandomNumber(database.blockArrayList.size());
+                int blockIndex = generateRandomNumber(database.getBlockArrayList().size());
 
                 int x = emptyCell.x;
                 int y = emptyCell.y;
                 int z = emptyCell.z;
 
-                if (grid.validPlacement(x, y, z, database.blockArrayList.get(blockIndex))) {
-                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex));
+                if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(blockIndex))) {
+                    grid.placeBlock(x, y, z, database.getBlockArrayList().get(blockIndex));
                     foundPlacement = true;
                     break;
                 }
@@ -49,8 +48,8 @@ public class RandomSearch implements Renderable {
     }
 
     @Override
-    public int[][][] getData(){
-        return randomSearch().grid;
+    public int[][][] getData(UnitDatabase database){
+        return randomSearch(database).grid;
     }
 
     @Override
