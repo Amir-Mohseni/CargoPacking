@@ -38,7 +38,7 @@ public class JFX3D extends Application {
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private String selectedAlgo;
     private final Map<Integer, String> colorMap = new HashMap<>();
-    private double scrollBarPosition;
+    private double scrollBarPositionX, scrollBarPositionY, scrollBarPositionZ;
 
     @Override
     public void start(Stage primaryStage) {
@@ -83,7 +83,7 @@ public class JFX3D extends Application {
 
 
         VBox leftPane = new VBox();
-        leftPane.setSpacing(25);
+        leftPane.setSpacing(20);
         leftPane.setAlignment(Pos.CENTER);
 
         Button startButton = new Button("Start");
@@ -110,15 +110,38 @@ public class JFX3D extends Application {
         leftPane.getChildren().addAll(randomButton,greedyButton,algoXButton);
         leftPane.getChildren().addAll(startButton,resetButton);
 
-        ScrollBar scrollBar = new ScrollBar();
-        scrollBar.setMin(0);
-        scrollBar.setMax(200);
-        scrollBar.setUnitIncrement(10);
-        scrollBar.setBlockIncrement(10);
-        Label label3 = new Label("Adjust separation:");
-        label3.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        leftPane.getChildren().addAll(label3,scrollBar);
+        ScrollBar scrollBarX = new ScrollBar();
+        scrollBarX.setMin(0);
+        scrollBarX.setMax(200);
+        scrollBarX.setUnitIncrement(10);
+        scrollBarX.setBlockIncrement(10);
 
+        ScrollBar scrollBarY = new ScrollBar();
+        scrollBarY.setMin(0);
+        scrollBarY.setMax(200);
+        scrollBarY.setUnitIncrement(10);
+        scrollBarY.setBlockIncrement(10);
+
+        ScrollBar scrollBarZ = new ScrollBar();
+        scrollBarZ.setMin(0);
+        scrollBarZ.setMax(200);
+        scrollBarZ.setUnitIncrement(10);
+        scrollBarZ.setBlockIncrement(10);
+
+        Label label3 = new Label("X Axis:");
+        label3.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        Label label4 = new Label("Y Axis:");
+        label4.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        Label label5 = new Label("Z Axis:");
+        label5.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+
+        leftPane.getChildren().addAll(label3, scrollBarX, label4, scrollBarY, label5, scrollBarZ);
+
+        Label label6 = new Label("Scoring table:");
+        label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        Label scoreLabel = new Label();
+
+        leftPane.getChildren().addAll(label6,scoreLabel);
 
         startButton.setOnAction(e ->{
             if(randomButton.isSelected()){
@@ -140,9 +163,17 @@ public class JFX3D extends Application {
 
         });
         resetButton.setOnAction(e -> this.setupRender());
-        scrollBar.valueProperty().addListener((observable,oldValue,newValue)->{
-            scrollBarPosition = scrollBar.getValue(); //Values for the current position
-            System.out.println("ScrollBar's current position:"+newValue); //To print into the console the current position
+        scrollBarX.valueProperty().addListener((observable,oldValue,newValue)->{
+            scrollBarPositionX = scrollBarX.getValue(); //Values for the current position
+            System.out.println("ScrollBarX's current position:"+newValue); //To print into the console the current position
+        });
+        scrollBarY.valueProperty().addListener((observable,oldValue,newValue)->{
+            scrollBarPositionY = scrollBarY.getValue();
+            System.out.println("ScrollBarY's current position:"+newValue);
+        });
+        scrollBarZ.valueProperty().addListener((observable,oldValue,newValue)->{
+            scrollBarPositionZ = scrollBarZ.getValue();
+            System.out.println("ScrollBarZ's current position:"+newValue);
         });
         this.bp.setLeft(leftPane);
     }
