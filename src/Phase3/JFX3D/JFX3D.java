@@ -137,7 +137,7 @@ public class JFX3D extends Application {
 
         leftPane.getChildren().addAll(label3, scrollBarX, label4, scrollBarY, label5, scrollBarZ);
 
-        Label label6 = new Label("Scoring table:");
+        Label label6 = new Label("Score:");
         label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
         Label scoreLabel = new Label();
 
