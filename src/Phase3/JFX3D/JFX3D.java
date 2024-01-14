@@ -33,13 +33,13 @@ public class JFX3D extends Application {
     private double anchorAngleX = 0, anchorAngleY = 0;
 
 
-    private BorderPane bp = new BorderPane();
+    private final BorderPane bp = new BorderPane();
     private RotatorGroup rg = new RotatorGroup();
     private Stage stage;
     private final int cubeLength = 30;
     private final int spacing = 0;
     private String selectedAlgo;
-    private Map<Integer, String> colorMap = new HashMap<>();
+    private final Map<Integer, String> colorMap = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -130,9 +130,7 @@ public class JFX3D extends Application {
 
         });
         //Action listener for the reset button: Functionality to be added at a later time.
-        resetButton.setOnAction(e -> {
-            this.setupRender();
-        });
+        resetButton.setOnAction(e -> this.setupRender());
 
         this.bp.setLeft(leftPane);
     }
@@ -190,10 +188,8 @@ public class JFX3D extends Application {
             int R = random.nextInt(255), G = random.nextInt(255), B = random.nextInt(255);
             color = "#" + leftPad(Integer.toHexString(R)) + leftPad(Integer.toHexString(G)) + leftPad(Integer.toHexString(B));
             colorMap.put(id, color);
-            return color;
-        } else {
-            return color;
         }
+        return color;
 
     }
 
@@ -204,20 +200,12 @@ public class JFX3D extends Application {
     class RotatorGroup extends Group {
         Rotate r;
         Transform t = new Rotate();
-        /**
-         * Rotate around the x-axis
-         * @param ang
-         */
         void rotateX(int ang) {
             r = new Rotate(ang, Rotate.X_AXIS);
             t = t.createConcatenation(r);
             this.getTransforms().clear();
             this.getTransforms().add(t);
         }
-        /**
-         * Rotates around the Y-axis
-         * @param ang
-         */
         void rotateY(int ang) {
             r = new Rotate(ang, Rotate.Y_AXIS);
             t = t.createConcatenation(r);
@@ -255,7 +243,7 @@ public class JFX3D extends Application {
     }
 
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         launch(args);
     }
 }
