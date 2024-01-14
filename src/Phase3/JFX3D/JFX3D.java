@@ -4,11 +4,13 @@ import Packing.RandomSearch;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
@@ -83,18 +85,29 @@ public class JFX3D extends Application {
         Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
         stage.setScene(mainScene);
 
-        VBox leftPane = new VBox();
-        leftPane.setSpacing(20);
+        VBox column = new VBox();
+        column.setSpacing(10);
+        column.setAlignment(Pos.CENTER);
+
+        GridPane leftPane = new GridPane();
+        //leftPane.setSpacing(20);
+       // leftPane.setPrefSize(200,300);
         leftPane.setAlignment(Pos.CENTER);
+        leftPane.setPadding(new Insets(10));
+        leftPane.setHgap(10);
+        leftPane.setVgap(10);
+
 
         Button startButton = new Button("Start");
-        startButton.setPrefSize(80,40);
+        startButton.setPrefSize(50,10);
+        Button stopButton = new Button("Stop");
+        stopButton.setPrefSize(50,10);
         Button resetButton = new Button("Reset");
-        resetButton.setPrefSize(80,40);
+        resetButton.setPrefSize(50,10);
 
         Label label1 = new Label("3D PACKING SOLVER");
         label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        leftPane.getChildren().add(label1);
+        //leftPane.getChildren().add(label1);
 
         Menu algorithmMenu = new Menu("Algorithms");
         MenuItem random = new MenuItem("Random");
@@ -104,14 +117,14 @@ public class JFX3D extends Application {
         random.setOnAction(e->{selectedAlgo = "Random";});
         greedy.setOnAction(e->{selectedAlgo = "Random";});
         algoX.setOnAction(e->{selectedAlgo = "Algo X";});
-
         algorithmMenu.getItems().addAll(random,greedy,algoX);
 
         MenuBar menuBar1 = new MenuBar();
         menuBar1.getMenus().add(algorithmMenu);
-        leftPane.getChildren().add(menuBar1);
+        setWidthOfMenuBar(100,menuBar1);
+        //leftPane.getChildren().add(menuBar1);
 
-        Menu typeOfFilling = new Menu("Type of filling");
+        Menu typeOfFilling = new Menu("Parcels");
         MenuItem pentominoes = new MenuItem("Pentominoes");
         MenuItem cubes = new MenuItem("Cubes");
 
@@ -122,7 +135,8 @@ public class JFX3D extends Application {
 
         MenuBar menuBar2 = new MenuBar();
         menuBar2.getMenus().add(typeOfFilling);
-        leftPane.getChildren().add(menuBar2);
+        setWidthOfMenuBar(100,menuBar2);
+        //leftPane.getChildren().add(menuBar2);
 
 
         Label valuesLabel = new Label("Values");
@@ -137,18 +151,46 @@ public class JFX3D extends Application {
         TextField quantityText2 = new TextField();
         TextField quantityText3 = new TextField();
 
-        leftPane.getChildren().addAll(valuesLabel,valueText1,valueText2,valueText3);
-        leftPane.getChildren().addAll(quantityLabel,quantityText1,quantityText2,quantityText3);
+        setWidthOfTextField(50,valueText1);
+        setWidthOfTextField(50,valueText2);
+        setWidthOfTextField(50,valueText2);
+        setWidthOfTextField(50,valueText3);
+        setWidthOfTextField(50,quantityText1);
+        setWidthOfTextField(50,quantityText2);
+        setWidthOfTextField(50,quantityText3);
+
+        //leftPane.getChildren().addAll(valuesLabel,valueText1,valueText2,valueText3);
+        //leftPane.getChildren().addAll(quantityLabel,quantityText1,quantityText2,quantityText3);
 
 
-        leftPane.getChildren().addAll(startButton,resetButton);
+        //leftPane.getChildren().addAll(startButton,stopButton,resetButton);
 
 
         Label label6 = new Label("Score:");
         label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
         Label scoreLabel = new Label();
 
-        leftPane.getChildren().addAll(label6,scoreLabel);
+        //leftPane.getChildren().addAll(label6,scoreLabel);
+
+        leftPane.add(label1,1,0);
+        leftPane.add(menuBar1,1,1);
+        leftPane.add(menuBar2,1,2);
+
+        leftPane.add(valuesLabel,0,3);
+        leftPane.add(valueText1,0,4);
+        leftPane.add(valueText2,1,4);
+        leftPane.add(valueText3,2,4);
+        leftPane.add(quantityLabel,0,5);
+        leftPane.add(quantityText1,0,6);
+        leftPane.add(quantityText2,1,6);
+        leftPane.add(quantityText3,2,6);
+        leftPane.add(startButton,0,7);
+        leftPane.add(stopButton,1,7);
+        leftPane.add(resetButton,2,7);
+        leftPane.add(label6,0,8);
+        leftPane.add(scoreLabel,1,8);
+
+        //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
         startButton.setOnAction(e ->{
             if(selectedAlgo.equals("Random")){
@@ -196,8 +238,19 @@ public class JFX3D extends Application {
             }
 
         });
+        stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
         resetButton.setOnAction(e -> this.setupRender());
         this.bp.setLeft(leftPane);
+    }
+
+    public void setWidthOfTextField(int width, TextField textField){
+        textField.setPrefWidth(width);
+        textField.setMaxWidth(width);
+    }
+
+    public void setWidthOfMenuBar(int width, MenuBar menuBar){
+        menuBar.setPrefWidth(width);
+        menuBar.setMaxWidth(width);
     }
 
     private void render(Renderable renderable){
