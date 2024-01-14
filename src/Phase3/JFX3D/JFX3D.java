@@ -44,15 +44,12 @@ public class JFX3D extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        this.setup();
+        this.setupRender();
         this.setupUI();
     }
 
-    private void setup(){
+    private void setupRender(){
         this.rg = new RotatorGroup();
-        this.bp = new BorderPane();
-        Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
-
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
 
         SubScene scene = new SubScene(rg, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
@@ -69,56 +66,23 @@ public class JFX3D extends Application {
         perspectiveCamera.setFarClip(100000);
 
         PointLight pointLight1 = new PointLight();
-//        pointLight.setColor(Color.RED);
+        pointLight1.setColor(Color.WHITE);
         pointLight1.setTranslateX(-1000);
         pointLight1.setTranslateY(-1000);
         pointLight1.setTranslateZ(-1000);
         this.rg.getChildren().add(pointLight1);
-//
-//        PointLight pointLight2 = new PointLight();
-////        pointLight.setColor(Color.RED);
-//        pointLight2.setTranslateX(-1000);
-//        pointLight2.setTranslateY(0);
-//        pointLight2.setTranslateZ(0);
-//        this.rg.getChildren().add(pointLight2);
-//
-//        PointLight pointLight3 = new PointLight();
-////        pointLight.setColor(Color.RED);
-//        pointLight3.setTranslateX(0);
-//        pointLight3.setTranslateY(1000);
-//        pointLight3.setTranslateZ(0);
-//        this.rg.getChildren().add(pointLight3);
-//
-//        PointLight pointLight4 = new PointLight();
-////        pointLight.setColor(Color.RED);
-//        pointLight4.setTranslateX(0);
-//        pointLight4.setTranslateY(-1000);
-//        pointLight4.setTranslateZ(0);
-//        this.rg.getChildren().add(pointLight4);
-//
-//        PointLight pointLight5 = new PointLight();
-////        pointLight.setColor(Color.RED);
-//        pointLight5.setTranslateX(0);
-//        pointLight5.setTranslateY(0);
-//        pointLight5.setTranslateZ(1000);
-//        this.rg.getChildren().add(pointLight5);
-//
-//        PointLight pointLight6 = new PointLight();
-////        pointLight.setColor(Color.RED);
-//        pointLight6.setTranslateX(0);
-//        pointLight6.setTranslateY(0);
-//        pointLight6.setTranslateZ(-1000);
-//        this.rg.getChildren().add(pointLight6);
-
         initMouseControl(this.rg, scene, stage);
 
         stage.setTitle("Project 1 phase 3");
-        stage.setScene(mainScene);
         stage.show();
         stage.setOnCloseRequest(t -> System.exit(0));
     }
 
     private void setupUI(){
+        Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
+        stage.setScene(mainScene);
+
+
         VBox leftPane = new VBox();
         leftPane.setSpacing(25);
         leftPane.setAlignment(Pos.CENTER);
@@ -167,17 +131,14 @@ public class JFX3D extends Application {
         });
         //Action listener for the reset button: Functionality to be added at a later time.
         resetButton.setOnAction(e -> {
-            setup();
-            setupUI();
-            this.draw3D(new int[1][1][1]);
+            setupRender();
         });
 
         this.bp.setLeft(leftPane);
     }
 
     private void render(Renderable renderable){
-        setup();
-        setupUI();
+        this.setupRender();
         this.draw3D(renderable.getData());
     }
 
