@@ -33,8 +33,8 @@ public class JFX3D extends Application {
     private double anchorAngleX = 0, anchorAngleY = 0;
 
 
-    private final BorderPane bp = new BorderPane();
-    private final RotatorGroup rg = new RotatorGroup();
+    private BorderPane bp = new BorderPane();
+    private RotatorGroup rg = new RotatorGroup();
     private Stage stage;
     private final int cubeLength = 30;
     private final int spacing = 0;
@@ -49,6 +49,8 @@ public class JFX3D extends Application {
     }
 
     private void setup(){
+        this.rg = new RotatorGroup();
+        this.bp = new BorderPane();
         Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
 
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
@@ -165,13 +167,17 @@ public class JFX3D extends Application {
         });
         //Action listener for the reset button: Functionality to be added at a later time.
         resetButton.setOnAction(e -> {
-
+            setup();
+            setupUI();
+            this.draw3D(new int[1][1][1]);
         });
 
         this.bp.setLeft(leftPane);
     }
 
     private void render(Renderable renderable){
+        setup();
+        setupUI();
         this.draw3D(renderable.getData());
     }
 
