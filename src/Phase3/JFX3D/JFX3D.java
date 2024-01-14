@@ -56,7 +56,7 @@ public class JFX3D extends Application {
 
         this.bp.setCenter(scene);
 
-        scene.setFill(Color.LIGHTGRAY);
+        scene.setFill(Color.WHITE);
         scene.setCamera(perspectiveCamera);
 
         perspectiveCamera.translateXProperty().set(0);
@@ -131,7 +131,7 @@ public class JFX3D extends Application {
         });
         //Action listener for the reset button: Functionality to be added at a later time.
         resetButton.setOnAction(e -> {
-            setupRender();
+            this.setupRender();
         });
 
         this.bp.setLeft(leftPane);
