@@ -40,7 +40,8 @@ public class JFX3D extends Application {
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private String selectedAlgo;
-    private final Map<Integer, String> colorMap = new HashMap<>();
+//    private final Map<Integer, String> colorMap = new HashMap<>();
+    private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
 
     @Override
     public void start(Stage primaryStage) {
