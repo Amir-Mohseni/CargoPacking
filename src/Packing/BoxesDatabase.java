@@ -13,22 +13,22 @@ public class BoxesDatabase implements UnitDatabase {
     ArrayList<Unit> blockArrayList = new ArrayList<>();
     public BoxesDatabase() {
         A = new Block[]{
-                new Block(2, 2, 4, 0, 1),
-                new Block(2, 4, 2, 0, 1),
-                new Block(4, 2, 2, 0, 1)
+                new Block(2, 2, 4, 1, 1),
+                new Block(2, 4, 2, 1, 1),
+                new Block(4, 2, 2, 1, 1)
         };
 
         B = new Block[]{
-                new Block(2, 3, 4, 0, 2),
-                new Block(2, 4, 3, 0, 2),
-                new Block(3, 2, 4, 0, 2),
-                new Block(3, 4, 2, 0, 2),
-                new Block(4, 2, 3, 0, 2),
-                new Block(4, 3, 2, 0, 2)
+                new Block(2, 3, 4, 1, 2),
+                new Block(2, 4, 3, 1, 2),
+                new Block(3, 2, 4, 1, 2),
+                new Block(3, 4, 2, 1, 2),
+                new Block(4, 2, 3, 1, 2),
+                new Block(4, 3, 2, 1, 2)
         };
 
         C = new Block[]{
-                new Block(3, 3, 3, 0, 3)
+                new Block(3, 3, 3, 1, 3)
         };
 
         blockArrayList.addAll(Arrays.asList(A));

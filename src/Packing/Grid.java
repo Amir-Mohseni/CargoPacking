@@ -7,6 +7,8 @@ public class Grid {
     int nY;
     int nZ;
     public int[][][] grid;
+
+    int score;
     int numberOfEmptySpaces;
 
     TreeSet <Cell> emptyCells = new TreeSet<>();
@@ -43,6 +45,7 @@ public class Grid {
 
     void placeBlock(int x, int y, int z, Unit block) {
         int[][][] volume = block.getVolume();
+        score += block.getValue();
         for (int i = 0; i < volume.length; i++) {
             for (int j = 0; j < volume[i].length; j++) {
                 for (int k = 0; k < volume[i][j].length; k++) {

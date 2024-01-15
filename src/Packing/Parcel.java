@@ -16,6 +16,11 @@ public class Parcel implements Unit{
         setDimensions();
     }
 
+    @Override
+    public void setValue(int value) {
+        this.price = value;
+    }
+
     // keeps track on which rotation of the parcel are we
     public void rotate(){
         if(position + 1 < parcel_matrix.length){

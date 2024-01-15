@@ -54,7 +54,7 @@ public class RandomSearch implements Renderable {
 
     @Override
     public int getScore() {
-        return 0;
+        return grid.score;
     }
 
 }

@@ -18,6 +18,11 @@ public class Block implements Unit{
     }
 
     @Override
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    @Override
     public int[][][] getVolume() {
         return this.volume;
     }
