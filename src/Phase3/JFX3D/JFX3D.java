@@ -51,7 +51,6 @@ public class JFX3D extends Application {
         this.setupScenes();
         this.setupUI();
         this.setupRender();
-        this.render(new GreedySearch(), new BoxesDatabase());
     }
 
     private void setupScenes(){
