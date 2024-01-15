@@ -43,6 +43,8 @@ public class Parcel implements Unit{
     public int getHeight() { return height;}
     public int getDepth() { return depth;}
     public int getWidth() { return width;}
+    public int getValue() { return (int) price; }
+
     public double getPrice() { return price; }
 
     @Override
@@ -52,6 +54,7 @@ public class Parcel implements Unit{
 
     public int getColor(){ return color_id;}
     public int getSpace(){ return space; }
+
     public int[][][] getParcelMatrix() { return parcel_matrix[position];}
     public int getRotationCnt() { return parcel_matrix.length;}
 

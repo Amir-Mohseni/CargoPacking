@@ -26,4 +26,8 @@ public class Block implements Unit{
     public int getColor() {
         return this.color;
     }
+
+    public int getValue() {
+        return this.value;
+    }
 }
