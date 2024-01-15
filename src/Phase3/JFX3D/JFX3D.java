@@ -114,9 +114,7 @@ public class JFX3D extends Application {
         MenuItem greedy = new MenuItem("Greedy");
         MenuItem algoX = new MenuItem("Algorithm X");
 
-        random.setOnAction(e->{selectedAlgo = "Random";});
-        greedy.setOnAction(e->{selectedAlgo = "Random";});
-        algoX.setOnAction(e->{selectedAlgo = "Algo X";});
+
         algorithmMenu.getItems().addAll(random,greedy,algoX);
 
         MenuBar menuBar1 = new MenuBar();
@@ -128,8 +126,6 @@ public class JFX3D extends Application {
         MenuItem pentominoes = new MenuItem("Pentominoes");
         MenuItem cubes = new MenuItem("Cubes");
 
-        pentominoes.setOnAction(e->{selectedFilling = "Pentominoes";});
-        cubes.setOnAction(e->{selectedFilling = "Cubes";});
 
         typeOfFilling.getItems().addAll(pentominoes,cubes);
 
@@ -138,6 +134,10 @@ public class JFX3D extends Application {
         setWidthOfMenuBar(100,menuBar2);
         //leftPane.getChildren().add(menuBar2);
 
+        TextField selectedAlgorithm = new TextField();
+        TextField selectedParcel = new TextField();
+        setWidthOfTextField(100,selectedAlgorithm);
+        setWidthOfTextField(100,selectedParcel);
 
         Label valuesLabel = new Label("Values");
         valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
@@ -170,11 +170,23 @@ public class JFX3D extends Application {
         label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
         Label scoreLabel = new Label();
 
+        ScrollBar scrollBarX = new ScrollBar();
+        ScrollBar scrollBarY = new ScrollBar();
+        ScrollBar scrollBarZ = new ScrollBar();
+
+        setParametersScrollBar(scrollBarX,0,200);
+        setParametersScrollBar(scrollBarY,0,200);
+        setParametersScrollBar(scrollBarZ,0,200);
+
+
         //leftPane.getChildren().addAll(label6,scoreLabel);
 
         leftPane.add(label1,1,0);
-        leftPane.add(menuBar1,1,1);
-        leftPane.add(menuBar2,1,2);
+        leftPane.add(menuBar1,0,1);
+        leftPane.add(menuBar2,0,2);
+
+        leftPane.add(selectedAlgorithm,1,1);
+        leftPane.add(selectedParcel,1,2);
 
         leftPane.add(valuesLabel,0,3);
         leftPane.add(valueText1,0,4);
@@ -189,6 +201,9 @@ public class JFX3D extends Application {
         leftPane.add(resetButton,2,7);
         leftPane.add(label6,0,8);
         leftPane.add(scoreLabel,1,8);
+        leftPane.add(scrollBarX,0,9);
+        leftPane.add(scrollBarY,0,10);
+        leftPane.add(scrollBarZ,0,11);
 
         //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
@@ -207,37 +222,80 @@ public class JFX3D extends Application {
                 System.out.println("No option has been selected");
             }
 
-            //For retrieving the input from the TextFields for values
-
-            String valuesText1 = valueText1.getText();
-            String valuesText2 = valueText2.getText();
-            String valuesText3 = valueText3.getText();
-
-            if(!valuesText1.isEmpty() && !valuesText2.isEmpty() && !valuesText3.isEmpty()){
-                value1 = Integer.parseInt(valuesText1);
-                value2 = Integer.parseInt(valuesText2);
-                value3 = Integer.parseInt(valuesText3);
-                System.out.println("Values: "+value1+", "+value2+", "+value3);
-            } else {
-                System.out.println("Values not entered");
-            }
-
-            //For retrieving the input from Quantity TextFields
-
-            String quantityString1 = quantityText1.getText();
-            String quantityString2 = quantityText2.getText();
-            String quantityString3 = quantityText3.getText();
-
-            if(!quantityString1.isEmpty() && !quantityString2.isEmpty() && !quantityString3.isEmpty()){
-                quantity1 = Integer.parseInt(quantityString1);
-                quantity2 = Integer.parseInt(quantityString2);
-                quantity3 = Integer.parseInt(quantityString3);
-                System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
-            } else{
-                System.out.println("Quantities not entered");
-            }
+            System.out.println("Values: "+value1+", "+value2+", "+value3);
+            System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
 
         });
+
+        //ActionListeners for updating the testAre with the selected algorithm
+        random.setOnAction(e->{
+            selectedAlgo = "Random";
+            selectedAlgorithm.clear();
+            selectedAlgorithm.appendText(selectedAlgo);
+        });
+        greedy.setOnAction(e->{
+            selectedAlgo = "Greedy";
+            selectedAlgorithm.clear();
+            selectedAlgorithm.appendText(selectedAlgo);
+        });
+        algoX.setOnAction(e->{
+            selectedAlgo = "Algo X";
+            selectedAlgorithm.clear();
+            selectedAlgorithm.appendText(selectedAlgo);
+        });
+
+        //ActionListeners for updating the textArea with the selected parcel type
+        pentominoes.setOnAction(e->{
+            selectedFilling = "Pentominoes";
+            selectedParcel.clear();
+            selectedParcel.appendText(selectedFilling);
+        });
+        cubes.setOnAction(e->{
+            selectedFilling = "Cubes";
+            selectedParcel.clear();
+            selectedParcel.appendText(selectedFilling);
+        });
+
+
+        valueText1.setOnAction(e->{
+            String text = valueText1.getText();
+            if(!text.isEmpty()){value1 = Integer.parseInt(text);}
+        });
+        valueText2.setOnAction(e->{
+            String text = valueText2.getText();
+            if(!text.isEmpty()){value2 = Integer.parseInt(text);}
+        });
+        valueText3.setOnAction(e->{
+            String text = valueText3.getText();
+            if(!text.isEmpty()){value3 = Integer.parseInt(text);}
+        });
+
+        quantityText1.setOnAction(e->{
+            String text = quantityText1.getText();
+            if(!text.isEmpty()){quantity1 = Integer.parseInt(text);}
+        });
+        quantityText2.setOnAction(e->{
+            String text = quantityText2.getText();
+            if(!text.isEmpty()){quantity2 = Integer.parseInt(text);}
+        });
+        quantityText3.setOnAction(e->{
+            String text = quantityText3.getText();
+            if(!text.isEmpty()){quantity3 = Integer.parseInt(text);}
+        });
+
+
+        scrollBarX.valueProperty().addListener((observable,oldValue,newValue)->{
+            System.out.println("Current position of ScrollBarX: "+newValue);
+        });
+        scrollBarY.valueProperty().addListener((observable,oldValue,newValue)->{
+            System.out.println("Current position of ScrollBarY: "+newValue);
+        });
+        scrollBarZ.valueProperty().addListener((observable,oldValue,newValue)->{
+            System.out.println("Current position of ScrollBarZ: "+newValue);
+        });
+
+
+
         stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
         resetButton.setOnAction(e -> this.setupRender());
         this.bp.setLeft(leftPane);
@@ -251,6 +309,10 @@ public class JFX3D extends Application {
     public void setWidthOfMenuBar(int width, MenuBar menuBar){
         menuBar.setPrefWidth(width);
         menuBar.setMaxWidth(width);
+    }
+    public void setParametersScrollBar(ScrollBar scrollBar, double min, double max){
+        scrollBar.setMin(min);
+        scrollBar.setMax(max);
     }
 
     private void render(Renderable renderable){
