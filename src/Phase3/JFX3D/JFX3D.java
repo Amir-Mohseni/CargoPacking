@@ -1,14 +1,16 @@
 package Phase3.JFX3D;
 
-import Packing.*;
+import Packing.RandomSearch;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
@@ -35,9 +37,11 @@ public class JFX3D extends Application {
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private String selectedAlgo;
+    private String selectedFilling;
 //    private final Map<Integer, String> colorMap = new HashMap<>();
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
-    private double scrollBarPosition;
+    private int value1, value2, value3;
+    private int quantity1, quantity2, quantity3;
 
     @Override
     public void start(Stage primaryStage) {
@@ -80,71 +84,174 @@ public class JFX3D extends Application {
         Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
         stage.setScene(mainScene);
 
+        VBox column = new VBox();
+        column.setSpacing(10);
+        column.setAlignment(Pos.CENTER);
 
-        VBox leftPane = new VBox();
-        leftPane.setSpacing(25);
+        GridPane leftPane = new GridPane();
+        //leftPane.setSpacing(20);
+       // leftPane.setPrefSize(200,300);
         leftPane.setAlignment(Pos.CENTER);
+        leftPane.setPadding(new Insets(10));
+        leftPane.setHgap(10);
+        leftPane.setVgap(10);
+
 
         Button startButton = new Button("Start");
-        startButton.setPrefSize(80,40);
+        startButton.setPrefSize(50,10);
+        Button stopButton = new Button("Stop");
+        stopButton.setPrefSize(50,10);
         Button resetButton = new Button("Reset");
-        resetButton.setPrefSize(80,40);
+        resetButton.setPrefSize(50,10);
 
-        Label label1 = new Label("Controls for visualization");
+        Label label1 = new Label("3D PACKING SOLVER");
         label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        Label label2 = new Label("Select an Algorithm: ");
-        label2.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        leftPane.getChildren().addAll(label1, label2);
+        //leftPane.getChildren().add(label1);
+
+        Menu algorithmMenu = new Menu("Algorithms");
+        MenuItem random = new MenuItem("Random");
+        MenuItem greedy = new MenuItem("Greedy");
+        MenuItem algoX = new MenuItem("Algorithm X");
+
+        random.setOnAction(e->{selectedAlgo = "Random";});
+        greedy.setOnAction(e->{selectedAlgo = "Random";});
+        algoX.setOnAction(e->{selectedAlgo = "Algo X";});
+        algorithmMenu.getItems().addAll(random,greedy,algoX);
+
+        MenuBar menuBar1 = new MenuBar();
+        menuBar1.getMenus().add(algorithmMenu);
+        setWidthOfMenuBar(100,menuBar1);
+        //leftPane.getChildren().add(menuBar1);
+
+        Menu typeOfFilling = new Menu("Parcels");
+        MenuItem pentominoes = new MenuItem("Pentominoes");
+        MenuItem cubes = new MenuItem("Cubes");
+
+        pentominoes.setOnAction(e->{selectedFilling = "Pentominoes";});
+        cubes.setOnAction(e->{selectedFilling = "Cubes";});
+
+        typeOfFilling.getItems().addAll(pentominoes,cubes);
+
+        MenuBar menuBar2 = new MenuBar();
+        menuBar2.getMenus().add(typeOfFilling);
+        setWidthOfMenuBar(100,menuBar2);
+        //leftPane.getChildren().add(menuBar2);
 
 
-        ToggleGroup toggleGroup = new ToggleGroup();
-        RadioButton randomButton = new RadioButton("Random");
-        RadioButton greedyButton = new RadioButton("Greedy");
-        RadioButton algoXButton = new RadioButton("Algo X");
+        Label valuesLabel = new Label("Values");
+        valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
+        TextField valueText1 = new TextField();
+        TextField valueText2 = new TextField();
+        TextField valueText3 = new TextField();
 
-        randomButton.setToggleGroup(toggleGroup);
-        greedyButton.setToggleGroup(toggleGroup);
-        algoXButton.setToggleGroup(toggleGroup);
+        Label quantityLabel = new Label("Quantity");
+        quantityLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
+        TextField quantityText1 = new TextField();
+        TextField quantityText2 = new TextField();
+        TextField quantityText3 = new TextField();
 
-        leftPane.getChildren().addAll(randomButton,greedyButton,algoXButton);
-        leftPane.getChildren().addAll(startButton,resetButton);
+        setWidthOfTextField(50,valueText1);
+        setWidthOfTextField(50,valueText2);
+        setWidthOfTextField(50,valueText2);
+        setWidthOfTextField(50,valueText3);
+        setWidthOfTextField(50,quantityText1);
+        setWidthOfTextField(50,quantityText2);
+        setWidthOfTextField(50,quantityText3);
 
-        ScrollBar scrollBar = new ScrollBar();
-        scrollBar.setMin(0);
-        scrollBar.setMax(200);
-        scrollBar.setUnitIncrement(10);
-        scrollBar.setBlockIncrement(10);
-        Label label3 = new Label("Adjust separation:");
-        label3.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        leftPane.getChildren().addAll(label3,scrollBar);
+        //leftPane.getChildren().addAll(valuesLabel,valueText1,valueText2,valueText3);
+        //leftPane.getChildren().addAll(quantityLabel,quantityText1,quantityText2,quantityText3);
 
+
+        //leftPane.getChildren().addAll(startButton,stopButton,resetButton);
+
+
+        Label label6 = new Label("Score:");
+        label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        Label scoreLabel = new Label();
+
+        //leftPane.getChildren().addAll(label6,scoreLabel);
+
+        leftPane.add(label1,1,0);
+        leftPane.add(menuBar1,1,1);
+        leftPane.add(menuBar2,1,2);
+
+        leftPane.add(valuesLabel,0,3);
+        leftPane.add(valueText1,0,4);
+        leftPane.add(valueText2,1,4);
+        leftPane.add(valueText3,2,4);
+        leftPane.add(quantityLabel,0,5);
+        leftPane.add(quantityText1,0,6);
+        leftPane.add(quantityText2,1,6);
+        leftPane.add(quantityText3,2,6);
+        leftPane.add(startButton,0,7);
+        leftPane.add(stopButton,1,7);
+        leftPane.add(resetButton,2,7);
+        leftPane.add(label6,0,8);
+        leftPane.add(scoreLabel,1,8);
+
+        //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
         startButton.setOnAction(e ->{
-            if(randomButton.isSelected()){
-                selectedAlgo = "Random";
+            if(selectedAlgo.equals("Random")){
                 this.render(new RandomSearch(), new PentominoDatabase());
             }
 
-            if(greedyButton.isSelected()){
-                selectedAlgo = "Greedy";
+            if(selectedAlgo.equals("Greedy")){
                 this.render(new GreedySearch(), new PentominoDatabase());
             }
 
-            if(algoXButton.isSelected()){
-                selectedAlgo = "Algo X";
+            if(selectedAlgo.equals("Algo X")){
+                System.out.println(selectedAlgo);
             }
 
             if(selectedAlgo == null){
                 System.out.println("No option has been selected");
             }
 
+            //For retrieving the input from the TextFields for values
+
+            String valuesText1 = valueText1.getText();
+            String valuesText2 = valueText2.getText();
+            String valuesText3 = valueText3.getText();
+
+            if(!valuesText1.isEmpty() && !valuesText2.isEmpty() && !valuesText3.isEmpty()){
+                value1 = Integer.parseInt(valuesText1);
+                value2 = Integer.parseInt(valuesText2);
+                value3 = Integer.parseInt(valuesText3);
+                System.out.println("Values: "+value1+", "+value2+", "+value3);
+            } else {
+                System.out.println("Values not entered");
+            }
+
+            //For retrieving the input from Quantity TextFields
+
+            String quantityString1 = quantityText1.getText();
+            String quantityString2 = quantityText2.getText();
+            String quantityString3 = quantityText3.getText();
+
+            if(!quantityString1.isEmpty() && !quantityString2.isEmpty() && !quantityString3.isEmpty()){
+                quantity1 = Integer.parseInt(quantityString1);
+                quantity2 = Integer.parseInt(quantityString2);
+                quantity3 = Integer.parseInt(quantityString3);
+                System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
+            } else{
+                System.out.println("Quantities not entered");
+            }
+
         });
+        stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
         resetButton.setOnAction(e -> this.setupRender());
-        scrollBar.valueProperty().addListener((observable,oldValue,newValue)->{
-            scrollBarPosition = scrollBar.getValue(); //Values for the current position
-            System.out.println("ScrollBar's current position:"+newValue); //To print into the console the current position
-        });
         this.bp.setLeft(leftPane);
+    }
+
+    public void setWidthOfTextField(int width, TextField textField){
+        textField.setPrefWidth(width);
+        textField.setMaxWidth(width);
+    }
+
+    public void setWidthOfMenuBar(int width, MenuBar menuBar){
+        menuBar.setPrefWidth(width);
+        menuBar.setMaxWidth(width);
     }
 
     private void render(Renderable renderable, UnitDatabase database){
