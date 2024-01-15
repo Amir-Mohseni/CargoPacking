@@ -26,19 +26,19 @@ public class Constants {
             public static final String ALGORITHM_MENU_TEXT = "Algorithms";
 
             public enum Algorithm {
-                RANDOM(new RandomSearch(),"Random"),
-                GREEDY(new GreedySearch(), "Greedy"),
+                RANDOM(RandomSearch.class,"Random"),
+                GREEDY(GreedySearch.class, "Greedy"),
                 ALGORITHM_X(null,"Algorithm X");
 
                 private final String name;
-                private final Renderable renderable;
+                private final Class renderable;
 
-                Algorithm(Renderable renderable, String name) {
+                Algorithm(Class renderable, String name) {
                     this.name = name;
                     this.renderable = renderable;
                 }
 
-                public Renderable getRenderable(){
+                public Class getRenderable(){
                     return this.renderable;
                 }
 
@@ -56,18 +56,18 @@ public class Constants {
             public static final String PARCEL_MENU_TEXT = "Parcels";
 
             public enum Parcel {
-                PENTOMINOES(new PentominoDatabase(), "Pentominoes"),
-                BOXES(new BoxesDatabase(), "Boxes");
+                PENTOMINOES(PentominoDatabase.class, "Pentominoes"),
+                BOXES(BoxesDatabase.class, "Boxes");
 
                 private final String name;
-                private final UnitDatabase database;
+                private final Class database;
 
-                Parcel(UnitDatabase database, String name) {
+                Parcel(Class database, String name) {
                     this.name = name;
                     this.database = database;
                 }
 
-                public UnitDatabase getDatabase(){
+                public Class getDatabase(){
                     return this.database;
                 }
 

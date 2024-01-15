@@ -20,6 +20,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Random;
 
@@ -50,6 +51,7 @@ public class JFX3D extends Application {
         this.setupScenes();
         this.setupUI();
         this.setupRender();
+        this.render(new GreedySearch(), new BoxesDatabase());
     }
 
     private void setupScenes(){
@@ -205,7 +207,17 @@ public class JFX3D extends Application {
         //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
         startButton.setOnAction(e ->{
-            this.render(selectedAlgo.getRenderable(), selectedFilling.getDatabase());
+            try {
+                this.render((Renderable) selectedAlgo.getRenderable().getConstructor().newInstance(), (UnitDatabase) selectedFilling.getDatabase().getConstructor().newInstance());
+            } catch (InstantiationException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            }
 
             //For retrieving the input from the TextFields for values
             String valuesText1 = valueText1.getText();
