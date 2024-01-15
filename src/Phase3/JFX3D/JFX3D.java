@@ -86,10 +86,6 @@ public class JFX3D extends Application {
         Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
         stage.setScene(mainScene);
 
-        VBox column = new VBox();
-        column.setSpacing(10);
-        column.setAlignment(Pos.CENTER);
-
 
         Button startButton = new Button("Start");
         startButton.setPrefSize(50,10);
@@ -100,7 +96,6 @@ public class JFX3D extends Application {
 
         Label label1 = new Label("3D PACKING SOLVER");
         label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        //leftPane.getChildren().add(label1);
 
         Menu algorithmMenu = new Menu("Algorithms");
         MenuItem random = new MenuItem("Random");
@@ -118,17 +113,16 @@ public class JFX3D extends Application {
         MenuItem pentominoes = new MenuItem("Pentominoes");
         MenuItem cubes = new MenuItem("Cubes");
 
-
         typeOfFilling.getItems().addAll(pentominoes,cubes);
 
         MenuBar menuBar2 = new MenuBar();
         menuBar2.getMenus().add(typeOfFilling);
         setWidthOfMenuBar(100,menuBar2);
 
-        TextField selectedAlgorithm = new TextField();
-        TextField selectedParcel = new TextField();
-        setWidthOfTextField(100,selectedAlgorithm);
-        setWidthOfTextField(100,selectedParcel);
+
+        Label selectedAlgorithm = new Label();
+        Label selectedParcel = new Label();
+
 
         Label valuesLabel = new Label("Values");
         valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
@@ -151,11 +145,9 @@ public class JFX3D extends Application {
         setWidthOfTextField(50,quantityText3);
 
 
-
-
-        Label label6 = new Label("Score:");
-        label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        TextField scoreTextfield = new TextField();
+        Label scoreLabel = new Label("Score:");
+        scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        Label currentScoreLabel = new Label();
 
         ScrollBar scrollBarX = new ScrollBar();
         ScrollBar scrollBarY = new ScrollBar();
@@ -170,52 +162,59 @@ public class JFX3D extends Application {
         Label scrollerLabelZ = new Label("Z axis");
 
 
-
-
         HBox algorithmMenuGroup = new HBox();
         algorithmMenuGroup.getChildren().addAll(menuBar1,selectedAlgorithm);
+        algorithmMenuGroup.setAlignment(Pos.CENTER);
         algorithmMenuGroup.setSpacing(10);
 
         HBox parcelMenuGroup = new HBox();
         parcelMenuGroup.getChildren().addAll(menuBar2,selectedParcel);
+        parcelMenuGroup.setAlignment(Pos.CENTER);
         parcelMenuGroup.setSpacing(10);
 
         HBox valuesTextFieldGroup = new HBox();
         valuesTextFieldGroup.getChildren().addAll(valueText1,valueText2,valueText3);
+        valuesTextFieldGroup.setAlignment(Pos.CENTER);
         valuesTextFieldGroup.setSpacing(10);
 
         HBox quantityTextFieldGroup = new HBox();
         quantityTextFieldGroup.getChildren().addAll(quantityText1,quantityText2,quantityText3);
+        quantityTextFieldGroup.setAlignment(Pos.CENTER);
         quantityTextFieldGroup.setSpacing(10);
 
         HBox scoreGroup = new HBox();
-        scoreGroup.getChildren().addAll(label6,scoreTextfield);
+        scoreGroup.getChildren().addAll(scoreLabel,currentScoreLabel);
+        scoreGroup.setAlignment(Pos.CENTER);
         scoreGroup.setSpacing(10);
 
         HBox buttonsGroup = new HBox();
         buttonsGroup.getChildren().addAll(startButton,stopButton,resetButton);
+        buttonsGroup.setAlignment(Pos.CENTER);
         buttonsGroup.setSpacing(10);
 
         HBox scrollerXGroup = new HBox();
         scrollerXGroup.getChildren().addAll(scrollerLabelX,scrollBarX);
+        scrollerXGroup.setAlignment(Pos.CENTER);
         scrollerXGroup.setSpacing(10);
 
         HBox scrollerYGroup = new HBox();
         scrollerYGroup.getChildren().addAll(scrollerLabelY,scrollBarY);
+        scrollerYGroup.setAlignment(Pos.CENTER);
         scrollerYGroup.setSpacing(10);
 
         HBox scrollerZGroup = new HBox();
         scrollerZGroup.getChildren().addAll(scrollerLabelZ,scrollBarZ);
+        scrollerZGroup.setAlignment(Pos.CENTER);
         scrollerZGroup.setSpacing(10);
 
         VBox mainGroup = new VBox();
         mainGroup.getChildren().addAll(label1,algorithmMenuGroup,parcelMenuGroup,valuesLabel,valuesTextFieldGroup,quantityLabel,quantityTextFieldGroup,
         buttonsGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
         mainGroup.setAlignment(Pos.CENTER);
+        mainGroup.setPadding(new Insets(10));
         mainGroup.setSpacing(15);
 
-        //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
-
+        //ActionListener for StartButton
         startButton.setOnAction(e ->{
             if(selectedAlgo.equals("Random")){
                 System.out.println(selectedAlgo);
@@ -239,33 +238,30 @@ public class JFX3D extends Application {
         //ActionListeners for updating the testAre with the selected algorithm
         random.setOnAction(e->{
             selectedAlgo = "Random";
-            selectedAlgorithm.clear();
-            selectedAlgorithm.appendText(selectedAlgo);
+            selectedAlgorithm.setText(selectedAlgo);
         });
         greedy.setOnAction(e->{
             selectedAlgo = "Greedy";
-            selectedAlgorithm.clear();
-            selectedAlgorithm.appendText(selectedAlgo);
+            selectedAlgorithm.setText(selectedAlgo);
         });
         algoX.setOnAction(e->{
             selectedAlgo = "Algo X";
-            selectedAlgorithm.clear();
-            selectedAlgorithm.appendText(selectedAlgo);
+            selectedAlgorithm.setText(selectedAlgo);
         });
 
         //ActionListeners for updating the textArea with the selected parcel type
         pentominoes.setOnAction(e->{
             selectedFilling = "Pentominoes";
-            selectedParcel.clear();
-            selectedParcel.appendText(selectedFilling);
+            selectedParcel.setText(selectedFilling);
         });
         cubes.setOnAction(e->{
             selectedFilling = "Cubes";
-            selectedParcel.clear();
-            selectedParcel.appendText(selectedFilling);
+            selectedParcel.setText(selectedFilling);
         });
 
+        //TODO: Set ActionListener for the currentScoreLabel
 
+        //ActionListeners for getting the text from the value text cells
         valueText1.setOnAction(e->{
             String text = valueText1.getText();
             if(!text.isEmpty()){value1 = Integer.parseInt(text);}
@@ -279,6 +275,7 @@ public class JFX3D extends Application {
             if(!text.isEmpty()){value3 = Integer.parseInt(text);}
         });
 
+        //ActionListeners for getting the text from the quantity text cells
         quantityText1.setOnAction(e->{
             String text = quantityText1.getText();
             if(!text.isEmpty()){quantity1 = Integer.parseInt(text);}
@@ -292,7 +289,7 @@ public class JFX3D extends Application {
             if(!text.isEmpty()){quantity3 = Integer.parseInt(text);}
         });
 
-
+        //ActionListeners for getting the current positions of each scroller
         scrollBarX.valueProperty().addListener((observable,oldValue,newValue)->{
             System.out.println("Current position of ScrollBarX: "+newValue);
         });
@@ -304,8 +301,7 @@ public class JFX3D extends Application {
         });
 
 
-
-        stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
+        stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added. TODO
         resetButton.setOnAction(e -> this.setupRender());
         this.bp.setLeft(mainGroup);
     }
