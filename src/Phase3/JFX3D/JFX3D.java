@@ -1,6 +1,6 @@
 package Phase3.JFX3D;
 
-import Packing.RandomSearch;
+import Packing.*;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -24,16 +24,17 @@ import java.util.Map;
 import java.util.Random;
 
 public class JFX3D extends Application {
-    public static final int WIDTH = Settings.Window.WINDOW_WIDTH, HEIGHT = Settings.Window.WINDOW_HEIGHT;
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
     private double anchorAngleX = 0, anchorAngleY = 0;
 
 
-    private final BorderPane bp = new BorderPane();
-    private RotatorGroup rg = new RotatorGroup();
-    private Stage stage;
+    private final BorderPane borderPane = new BorderPane();
+    private final BorderPane menuPane = new BorderPane();
+    private RotatorGroup rotatorGroup = new RotatorGroup();
+    private Stage renderStage;
+    private Stage menuStage = new Stage();
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private String selectedAlgo;
@@ -45,18 +46,36 @@ public class JFX3D extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.stage = primaryStage;
+        this.renderStage = primaryStage;
+        this.setupScenes();
         this.setupRender();
         this.setupUI();
+        this.render(new RandomSearch(), new PentominoDatabase());
+    }
+
+    private void setupScenes(){
+        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
+        renderStage.setScene(mainScene);
+        renderStage.setTitle("Packing Render");
+        renderStage.setOnCloseRequest(t -> System.exit(0));
+        renderStage.show();
+
+
+        Scene menuScene = new Scene(this.menuPane, Settings.Window.MENU_WINDOW_WIDTH, Settings.Window.MENU_WINDOW_HEIGHT);
+        menuStage.setScene(menuScene);
+        menuStage.setTitle("Menu");
+        menuStage.setOnCloseRequest(t -> System.exit(0));
+        menuStage.show();
     }
 
     private void setupRender(){
-        this.rg = new RotatorGroup();
+
+        this.rotatorGroup = new RotatorGroup();
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
 
-        SubScene scene = new SubScene(rg, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
+        SubScene scene = new SubScene(rotatorGroup, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT, true, SceneAntialiasing.BALANCED);
 
-        this.bp.setCenter(scene);
+        this.borderPane.setCenter(scene);
 
         scene.setFill(Settings.Window.BACKGROUND_COLOR);
         scene.setCamera(perspectiveCamera);
@@ -72,18 +91,12 @@ public class JFX3D extends Application {
         pointLight1.setTranslateX(-1000);
         pointLight1.setTranslateY(-1000);
         pointLight1.setTranslateZ(-1000);
-        this.rg.getChildren().add(pointLight1);
-        initMouseControl(this.rg, scene, stage);
+        this.rotatorGroup.getChildren().add(pointLight1);
+        initMouseControl(this.rotatorGroup, scene, renderStage);
 
-        stage.setTitle("Project 1 phase 3");
-        stage.show();
-        stage.setOnCloseRequest(t -> System.exit(0));
     }
 
     private void setupUI(){
-        Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
-        stage.setScene(mainScene);
-
         VBox column = new VBox();
         column.setSpacing(10);
         column.setAlignment(Pos.CENTER);
@@ -114,7 +127,7 @@ public class JFX3D extends Application {
         MenuItem algoX = new MenuItem("Algorithm X");
 
         random.setOnAction(e->{selectedAlgo = "Random";});
-        greedy.setOnAction(e->{selectedAlgo = "Random";});
+        greedy.setOnAction(e->{selectedAlgo = "Greedy";});
         algoX.setOnAction(e->{selectedAlgo = "Algo X";});
         algorithmMenu.getItems().addAll(random,greedy,algoX);
 
@@ -123,7 +136,7 @@ public class JFX3D extends Application {
         setWidthOfMenuBar(100,menuBar1);
         //leftPane.getChildren().add(menuBar1);
 
-        Menu typeOfFilling = new Menu("Parcels");
+        Menu typeOfFilling = new Menu("Parcel Type");
         MenuItem pentominoes = new MenuItem("Pentominoes");
         MenuItem cubes = new MenuItem("Cubes");
 
@@ -167,7 +180,7 @@ public class JFX3D extends Application {
 
         Label label6 = new Label("Score:");
         label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label scoreLabel = new Label();
+        Label scoreLabel = new Label("_");
 
         //leftPane.getChildren().addAll(label6,scoreLabel);
 
@@ -241,7 +254,8 @@ public class JFX3D extends Application {
         });
         stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
         resetButton.setOnAction(e -> this.setupRender());
-        this.bp.setLeft(leftPane);
+
+        this.menuPane.setLeft(leftPane);
     }
 
     public void setWidthOfTextField(int width, TextField textField){
@@ -290,7 +304,7 @@ public class JFX3D extends Application {
                     newBox.setTranslateY(transY);
                     newBox.setTranslateZ(transZ);
 
-                    this.rg.getChildren().add(newBox);
+                    this.rotatorGroup.getChildren().add(newBox);
                 }
             }
         }
