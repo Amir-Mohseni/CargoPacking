@@ -168,7 +168,7 @@ public class JFX3D extends Application {
 
         Label label6 = new Label("Score:");
         label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label scoreLabel = new Label();
+        TextField scoreTextfield = new TextField();
 
         ScrollBar scrollBarX = new ScrollBar();
         ScrollBar scrollBarY = new ScrollBar();
@@ -178,6 +178,9 @@ public class JFX3D extends Application {
         setParametersScrollBar(scrollBarY,0,200);
         setParametersScrollBar(scrollBarZ,0,200);
 
+        Label scrollerLabelX = new Label("X axis");
+        Label scrollerLabelY = new Label("Y axis");
+        Label scrollerLabelZ = new Label("Z axis");
 
         //leftPane.getChildren().addAll(label6,scoreLabel);
 
@@ -200,10 +203,13 @@ public class JFX3D extends Application {
         leftPane.add(stopButton,1,7);
         leftPane.add(resetButton,2,7);
         leftPane.add(label6,0,8);
-        leftPane.add(scoreLabel,1,8);
-        leftPane.add(scrollBarX,0,9);
-        leftPane.add(scrollBarY,0,10);
-        leftPane.add(scrollBarZ,0,11);
+        leftPane.add(scoreTextfield,1,8);
+        leftPane.add(scrollerLabelX,0,9);
+        leftPane.add(scrollBarX,1,9);
+        leftPane.add(scrollerLabelY,0,10);
+        leftPane.add(scrollBarY,1,10);
+        leftPane.add(scrollerLabelZ,0,11);
+        leftPane.add(scrollBarZ,1,11);
 
         //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
