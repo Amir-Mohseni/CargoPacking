@@ -3,7 +3,7 @@ package Packing;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Database implements UnitDatabase {
+public class BoxesDatabase implements UnitDatabase {
     // 2 x 2 x 4
     Unit[] A;
     // 2 x 3 x 4
@@ -11,7 +11,7 @@ public class Database implements UnitDatabase {
     // 3 x 3 x 3
     Unit[] C;
     ArrayList<Unit> blockArrayList = new ArrayList<>();
-    public Database() {
+    public BoxesDatabase() {
         A = new Block[]{
                 new Block(2, 2, 4, 0, 1),
                 new Block(2, 4, 2, 0, 1),

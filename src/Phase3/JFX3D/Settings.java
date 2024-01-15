@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import java.util.Map;
 
 public class Settings {
-    public class Window{
+    public static class Window{
         public static final Color BACKGROUND_COLOR = Color.WHITE;
         public static final Color LIGHT_COLOR = Color.WHITE;
 
@@ -16,7 +16,7 @@ public class Settings {
         public static final int MENU_WINDOW_HEIGHT = 640;
     }
 
-    public class Camera {
+    public static class Camera {
         public static final int OFFSET_X = 0;
         public static final int OFFSET_Y = 0;
         public static final int OFFSET_Z = -2150;
@@ -24,7 +24,7 @@ public class Settings {
         public static final int FAR_CLIP = 100000;
     }
 
-    public class Cubes {
+    public static class Cubes {
         public static final int CUBE_LENGTH = 30;
         public static final int CUBE_SPACING = 0;
 

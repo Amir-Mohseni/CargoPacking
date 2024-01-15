@@ -30,15 +30,15 @@ public class JFX3D extends Application {
     private double anchorAngleX = 0, anchorAngleY = 0;
 
 
-    private final BorderPane borderPane = new BorderPane();
+    private BorderPane borderPane = new BorderPane();
     private final BorderPane menuPane = new BorderPane();
     private RotatorGroup rotatorGroup = new RotatorGroup();
     private Stage renderStage;
     private Stage menuStage = new Stage();
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
-    private String selectedAlgo;
-    private String selectedFilling;
+    private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
+    private Constants.Settings.ParcelSettings.Parcel selectedFilling;
 //    private final Map<Integer, String> colorMap = new HashMap<>();
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
     private int value1, value2, value3;
@@ -48,27 +48,27 @@ public class JFX3D extends Application {
     public void start(Stage primaryStage) {
         this.renderStage = primaryStage;
         this.setupScenes();
-        this.setupRender();
         this.setupUI();
-        this.render(new RandomSearch(), new PentominoDatabase());
+        this.setupRender();
     }
 
     private void setupScenes(){
-        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
-        renderStage.setScene(mainScene);
-        renderStage.setTitle("Packing Render");
-        renderStage.setOnCloseRequest(t -> System.exit(0));
-        renderStage.show();
 
 
         Scene menuScene = new Scene(this.menuPane, Settings.Window.MENU_WINDOW_WIDTH, Settings.Window.MENU_WINDOW_HEIGHT);
         menuStage.setScene(menuScene);
-        menuStage.setTitle("Menu");
+        menuStage.setTitle(Constants.Windows.UI_WINDOW_TITLE);
         menuStage.setOnCloseRequest(t -> System.exit(0));
         menuStage.show();
     }
 
     private void setupRender(){
+        this.borderPane = new BorderPane();
+        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
+        renderStage.setScene(mainScene);
+        renderStage.setTitle(Constants.Windows.RENDER_WINDOW_TITLE);
+        renderStage.setOnCloseRequest(t -> System.exit(0));
+        renderStage.show();
 
         this.rotatorGroup = new RotatorGroup();
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
@@ -110,25 +110,25 @@ public class JFX3D extends Application {
         leftPane.setVgap(10);
 
 
-        Button startButton = new Button("Start");
+        Button startButton = new Button(Constants.Settings.Buttons.START_BUTTON_TEXT);
         startButton.setPrefSize(50,10);
-        Button stopButton = new Button("Stop");
+        Button stopButton = new Button(Constants.Settings.Buttons.STOP_BUTTON_TEXT);
         stopButton.setPrefSize(50,10);
-        Button resetButton = new Button("Reset");
+        Button resetButton = new Button(Constants.Settings.Buttons.RESET_BUTTON_TEXT);
         resetButton.setPrefSize(50,10);
 
-        Label label1 = new Label("3D PACKING SOLVER");
-        label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
+        Label label1 = new Label(Constants.Settings.Title.UI_DISPLAY_TITLE_TEXT);
+        label1.setFont(Font.font(Constants.Settings.Title.UI_DISPLAY_TITLE_FONT, Constants.Settings.Title.UI_DISPLAY_TITLE_WEIGHT, Constants.Settings.Title.UI_DISPLAY_TITLE_SIZE));
         //leftPane.getChildren().add(label1);
 
-        Menu algorithmMenu = new Menu("Algorithms");
-        MenuItem random = new MenuItem("Random");
-        MenuItem greedy = new MenuItem("Greedy");
-        MenuItem algoX = new MenuItem("Algorithm X");
+        Menu algorithmMenu = new Menu(Constants.Settings.AlgorithmSettings.ALGORITHM_MENU_TEXT);
+        MenuItem random = new MenuItem(Constants.Settings.AlgorithmSettings.Algorithm.RANDOM.toString());
+        MenuItem greedy = new MenuItem(Constants.Settings.AlgorithmSettings.Algorithm.GREEDY.toString());
+        MenuItem algoX = new MenuItem(Constants.Settings.AlgorithmSettings.Algorithm.ALGORITHM_X.toString());
 
-        random.setOnAction(e->{selectedAlgo = "Random";});
-        greedy.setOnAction(e->{selectedAlgo = "Greedy";});
-        algoX.setOnAction(e->{selectedAlgo = "Algo X";});
+        random.setOnAction(e->{this.selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;});
+        greedy.setOnAction(e->{this.selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GREEDY;});
+        algoX.setOnAction(e->{this.selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.ALGORITHM_X;});
         algorithmMenu.getItems().addAll(random,greedy,algoX);
 
         MenuBar menuBar1 = new MenuBar();
@@ -136,12 +136,12 @@ public class JFX3D extends Application {
         setWidthOfMenuBar(100,menuBar1);
         //leftPane.getChildren().add(menuBar1);
 
-        Menu typeOfFilling = new Menu("Parcel Type");
-        MenuItem pentominoes = new MenuItem("Pentominoes");
-        MenuItem cubes = new MenuItem("Cubes");
+        Menu typeOfFilling = new Menu(Constants.Settings.ParcelSettings.PARCEL_MENU_TEXT);
+        MenuItem pentominoes = new MenuItem(Constants.Settings.ParcelSettings.Parcel.PENTOMINOES.toString());
+        MenuItem cubes = new MenuItem(Constants.Settings.ParcelSettings.Parcel.BOXES.toString());
 
-        pentominoes.setOnAction(e->{selectedFilling = "Pentominoes";});
-        cubes.setOnAction(e->{selectedFilling = "Cubes";});
+        pentominoes.setOnAction(e->{selectedFilling = Constants.Settings.ParcelSettings.Parcel.PENTOMINOES;});
+        cubes.setOnAction(e->{selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;});
 
         typeOfFilling.getItems().addAll(pentominoes,cubes);
 
@@ -205,24 +205,9 @@ public class JFX3D extends Application {
         //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
         startButton.setOnAction(e ->{
-            if(selectedAlgo.equals("Random")){
-                this.render(new RandomSearch(), new PentominoDatabase());
-            }
-
-            if(selectedAlgo.equals("Greedy")){
-                this.render(new GreedySearch(), new PentominoDatabase());
-            }
-
-            if(selectedAlgo.equals("Algo X")){
-                System.out.println(selectedAlgo);
-            }
-
-            if(selectedAlgo == null){
-                System.out.println("No option has been selected");
-            }
+            this.render(selectedAlgo.getRenderable(), selectedFilling.getDatabase());
 
             //For retrieving the input from the TextFields for values
-
             String valuesText1 = valueText1.getText();
             String valuesText2 = valueText2.getText();
             String valuesText3 = valueText3.getText();
