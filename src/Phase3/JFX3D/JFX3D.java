@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
@@ -89,14 +90,6 @@ public class JFX3D extends Application {
         column.setSpacing(10);
         column.setAlignment(Pos.CENTER);
 
-        GridPane leftPane = new GridPane();
-        //leftPane.setSpacing(20);
-       // leftPane.setPrefSize(200,300);
-        leftPane.setAlignment(Pos.CENTER);
-        leftPane.setPadding(new Insets(10));
-        leftPane.setHgap(10);
-        leftPane.setVgap(10);
-
 
         Button startButton = new Button("Start");
         startButton.setPrefSize(50,10);
@@ -120,7 +113,6 @@ public class JFX3D extends Application {
         MenuBar menuBar1 = new MenuBar();
         menuBar1.getMenus().add(algorithmMenu);
         setWidthOfMenuBar(100,menuBar1);
-        //leftPane.getChildren().add(menuBar1);
 
         Menu typeOfFilling = new Menu("Parcels");
         MenuItem pentominoes = new MenuItem("Pentominoes");
@@ -132,7 +124,6 @@ public class JFX3D extends Application {
         MenuBar menuBar2 = new MenuBar();
         menuBar2.getMenus().add(typeOfFilling);
         setWidthOfMenuBar(100,menuBar2);
-        //leftPane.getChildren().add(menuBar2);
 
         TextField selectedAlgorithm = new TextField();
         TextField selectedParcel = new TextField();
@@ -159,11 +150,7 @@ public class JFX3D extends Application {
         setWidthOfTextField(50,quantityText2);
         setWidthOfTextField(50,quantityText3);
 
-        //leftPane.getChildren().addAll(valuesLabel,valueText1,valueText2,valueText3);
-        //leftPane.getChildren().addAll(quantityLabel,quantityText1,quantityText2,quantityText3);
 
-
-        //leftPane.getChildren().addAll(startButton,stopButton,resetButton);
 
 
         Label label6 = new Label("Score:");
@@ -182,34 +169,50 @@ public class JFX3D extends Application {
         Label scrollerLabelY = new Label("Y axis");
         Label scrollerLabelZ = new Label("Z axis");
 
-        //leftPane.getChildren().addAll(label6,scoreLabel);
 
-        leftPane.add(label1,1,0);
-        leftPane.add(menuBar1,0,1);
-        leftPane.add(menuBar2,0,2);
 
-        leftPane.add(selectedAlgorithm,1,1);
-        leftPane.add(selectedParcel,1,2);
 
-        leftPane.add(valuesLabel,0,3);
-        leftPane.add(valueText1,0,4);
-        leftPane.add(valueText2,1,4);
-        leftPane.add(valueText3,2,4);
-        leftPane.add(quantityLabel,0,5);
-        leftPane.add(quantityText1,0,6);
-        leftPane.add(quantityText2,1,6);
-        leftPane.add(quantityText3,2,6);
-        leftPane.add(startButton,0,7);
-        leftPane.add(stopButton,1,7);
-        leftPane.add(resetButton,2,7);
-        leftPane.add(label6,0,8);
-        leftPane.add(scoreTextfield,1,8);
-        leftPane.add(scrollerLabelX,0,9);
-        leftPane.add(scrollBarX,1,9);
-        leftPane.add(scrollerLabelY,0,10);
-        leftPane.add(scrollBarY,1,10);
-        leftPane.add(scrollerLabelZ,0,11);
-        leftPane.add(scrollBarZ,1,11);
+        HBox algorithmMenuGroup = new HBox();
+        algorithmMenuGroup.getChildren().addAll(menuBar1,selectedAlgorithm);
+        algorithmMenuGroup.setSpacing(10);
+
+        HBox parcelMenuGroup = new HBox();
+        parcelMenuGroup.getChildren().addAll(menuBar2,selectedParcel);
+        parcelMenuGroup.setSpacing(10);
+
+        HBox valuesTextFieldGroup = new HBox();
+        valuesTextFieldGroup.getChildren().addAll(valueText1,valueText2,valueText3);
+        valuesTextFieldGroup.setSpacing(10);
+
+        HBox quantityTextFieldGroup = new HBox();
+        quantityTextFieldGroup.getChildren().addAll(quantityText1,quantityText2,quantityText3);
+        quantityTextFieldGroup.setSpacing(10);
+
+        HBox scoreGroup = new HBox();
+        scoreGroup.getChildren().addAll(label6,scoreTextfield);
+        scoreGroup.setSpacing(10);
+
+        HBox buttonsGroup = new HBox();
+        buttonsGroup.getChildren().addAll(startButton,stopButton,resetButton);
+        buttonsGroup.setSpacing(10);
+
+        HBox scrollerXGroup = new HBox();
+        scrollerXGroup.getChildren().addAll(scrollerLabelX,scrollBarX);
+        scrollerXGroup.setSpacing(10);
+
+        HBox scrollerYGroup = new HBox();
+        scrollerYGroup.getChildren().addAll(scrollerLabelY,scrollBarY);
+        scrollerYGroup.setSpacing(10);
+
+        HBox scrollerZGroup = new HBox();
+        scrollerZGroup.getChildren().addAll(scrollerLabelZ,scrollBarZ);
+        scrollerZGroup.setSpacing(10);
+
+        VBox mainGroup = new VBox();
+        mainGroup.getChildren().addAll(label1,algorithmMenuGroup,parcelMenuGroup,valuesLabel,valuesTextFieldGroup,quantityLabel,quantityTextFieldGroup,
+        buttonsGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
+        mainGroup.setAlignment(Pos.CENTER);
+        mainGroup.setSpacing(15);
 
         //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
 
@@ -304,7 +307,7 @@ public class JFX3D extends Application {
 
         stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
         resetButton.setOnAction(e -> this.setupRender());
-        this.bp.setLeft(leftPane);
+        this.bp.setLeft(mainGroup);
     }
 
     public void setWidthOfTextField(int width, TextField textField){
