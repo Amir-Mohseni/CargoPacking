@@ -2,81 +2,50 @@ package Packing;
 import Phase3.JFX3D.Renderable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.Collection;
 
-public class GreedySearch implements Renderable{
-    static Grid grid = new Grid(33, 5, 8);
-    static Database database = new Database();
+public class GreedySearch implements Renderable {
+    public Grid grid = new Grid(33, 5, 8);
 
-    static Grid greedySearch() {
-        int numberOfIterations = 1000000;
-        int count = 1;
+    public Grid greedySearch(UnitDatabase database) {
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
-        for (int i = 0; i < numberOfIterations; i++) {
+        while(!grid.emptyCells.isEmpty()) {
+            ArrayList <int[]> options = new ArrayList<>();
+            Cell emptyCell = grid.emptyCells.getFirst();
+            grid.emptyCells.remove(emptyCell);
+            for (int blockIndex = 0; blockIndex < database.getBlockArrayList().size(); blockIndex++) {
+                int x = emptyCell.x;
+                int y = emptyCell.y;
+                int z = emptyCell.z;
 
-            boolean foundPlacement = false;
-
-            //method to iterate through all empty cells
-            for (Cell cell : grid.emptyCells) {
-                int x = cell.getX();
-                int y = cell.getY();
-                int z = cell.getZ();
-
-                int blockIndex = findPlacement(x, y, z, database);
-
-                if (grid.validPlacement(x, y, z, database.blockArrayList.get(blockIndex))) {
-                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex), count++);
-                    foundPlacement = true;
-                    break;
+                if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(blockIndex))) {
+                    options.add(new int[]{database.getBlockArrayList().get(blockIndex).getValue(), x, y, z, blockIndex});
+//                    grid.placeBlock(x, y, z, database.getBlockArrayList().get(blockIndex));
+//                    break;
                 }
             }
-
-            System.out.println("Number of empty spaces is: " + grid.emptyCells.size());
-
-            if (!foundPlacement)
-                break;
+            //sort options by first element, bigger first
+            if(!options.isEmpty()) {
+                options.sort((o1, o2) -> o2[0] - o1[0]);
+                System.out.println(options.get(0)[0]);
+                grid.placeBlock(options.get(0)[1], options.get(0)[2], options.get(0)[3], database.getBlockArrayList().get(options.get(0)[4]));
+            }
         }
+        System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
+        System.out.println("Score: " + grid.score);
         return grid;
     }
-    static int findPlacement(int x, int y, int z, Database database) {
-        int blockIndex = 0;
-//        shuffle(database.blockArrayList);
-        for (int i = 0; i < database.blockArrayList.size(); i++) {
-            int[][][] volume = database.blockArrayList.get(i).volume;
-            for (int j = 0; j < volume.length; j++) {
-                for (int k = 0; k < volume[j].length; k++) {
-                    for(int l = 0; l < volume[j][k].length; l++) {
-                        if (volume[j][k][l] != 0) {
-                            if (i + x >= grid.nX
-                                || j + y >= grid.nY
-                                || k + z >= grid.nZ
-                                || grid.grid[i + x][j + y][k + z] != 0) blockIndex = i;
-                        }
-                    }
-                }
-            }
-        }
-        return blockIndex;
+
+    @Override
+    public int[][][] getData(UnitDatabase database){
+        return greedySearch(database).grid;
     }
-    static void shuffle(List<Block> blocks) {
-        Random rand = new Random();
-        for (int i = blocks.size() - 1; i > 0; i--) {
-            int index = rand.nextInt(i + 1);
-            // Simple swap
-            Block a = blocks.get(index);
-            blocks.set(index, blocks.get(i));
-            blocks.set(i, a);
-        }
-    }
-    public void run() {
-        greedySearch();
-    }
-    public int[][][] getData(){
-        return greedySearch().grid;
+
+    @Override
+    public int getScore() {
+        return grid.score;
     }
 
 }
-

@@ -7,6 +7,8 @@ public class Grid {
     int nY;
     int nZ;
     public int[][][] grid;
+
+    int score;
     int numberOfEmptySpaces;
 
     TreeSet <Cell> emptyCells = new TreeSet<>();
@@ -26,8 +28,8 @@ public class Grid {
         grid = new int[nX][nY][nZ];
     }
 
-    boolean validPlacement(int x, int y, int z, Block block) {
-        int[][][] volume = block.volume;
+    boolean validPlacement(int x, int y, int z, Unit block) {
+        int[][][] volume = block.getVolume();
         for (int i = 0; i < volume.length; i++) {
             for (int j = 0; j < volume[i].length; j++) {
                 for (int k = 0; k < volume[i][j].length; k++) {
@@ -41,14 +43,14 @@ public class Grid {
         return true;
     }
 
-    void placeBlock(int x, int y, int z, Block block, int uniqueID) {
-        int[][][] volume = block.volume;
+    void placeBlock(int x, int y, int z, Unit block) {
+        int[][][] volume = block.getVolume();
+        score += block.getValue();
         for (int i = 0; i < volume.length; i++) {
             for (int j = 0; j < volume[i].length; j++) {
                 for (int k = 0; k < volume[i][j].length; k++) {
                     if(volume[i][j][k] != 0) {
-//                        grid[i + x][j + y][k + z] = block.color;
-                        grid[i + x][j + y][k + z] = uniqueID;
+                        grid[i + x][j + y][k + z] = block.getColor();
                         numberOfEmptySpaces -= 1;
                         emptyCells.remove(new Cell(i + x, j + y, k + z));
                     }
