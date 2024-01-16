@@ -22,6 +22,10 @@ public class Block implements Unit{
         this.value = value;
     }
 
+    public void setVolume(int[][][] volume) {
+        this.volume = volume;
+    }
+
     @Override
     public int[][][] getVolume() {
         return this.volume;

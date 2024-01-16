@@ -42,10 +42,32 @@ public class PentominoDatabase implements UnitDatabase {
         int[][][][] p = build_piece(p_piece);
         int[][][][] t = build_piece(t_piece);
 
-        database = new ArrayList<Unit>(3);
-        database.add(new Parcel(t,5,5,1));
+//        database = new ArrayList<Unit>(3);
+        database = new ArrayList<Unit>();
+
+        for (int i = 0; i < l.length; i++) {
+            Block block = new Block(1, 4, 2, 1, 1);
+            block.setVolume(l[i]);
+            database.add(block);
+        }
+
+        for (int i = 0; i < p.length; i++) {
+            Block block = new Block(1, 3, 2, 1, 2);
+            block.setVolume(p[i]);
+            database.add(block);
+        }
+
+        for (int i = 0; i < t.length; i++) {
+            Block block = new Block(1, 3, 3, 1, 3);
+            block.setVolume(t[i]);
+            database.add(block);
+        }
+
+/*        database.add(new Parcel(t,5,5,1));
         database.add(new Parcel(p,4,5,2));
         database.add(new Parcel(l,3,5,3));
+
+ */
 
         
     }
