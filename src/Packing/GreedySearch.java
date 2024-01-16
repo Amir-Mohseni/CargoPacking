@@ -42,24 +42,13 @@ public class GreedySearch implements Renderable{
         return grid;
     }
     static int findPlacement(int x, int y, int z, Database database) {
-        int blockIndex = 0;
-//        shuffle(database.blockArrayList);
+        int j = 0;
         for (int i = 0; i < database.blockArrayList.size(); i++) {
-            int[][][] volume = database.blockArrayList.get(i).volume;
-            for (int j = 0; j < volume.length; j++) {
-                for (int k = 0; k < volume[j].length; k++) {
-                    for(int l = 0; l < volume[j][k].length; l++) {
-                        if (volume[j][k][l] != 0) {
-                            if (i + x >= grid.nX
-                                || j + y >= grid.nY
-                                || k + z >= grid.nZ
-                                || grid.grid[i + x][j + y][k + z] != 0) blockIndex = i;
-                        }
-                    }
-                }
+            if (grid.validPlacement(x, y, z, database.blockArrayList.get(i))) {
+                j = i;
             }
         }
-        return blockIndex;
+        return j;
     }
     static void shuffle(List<Block> blocks) {
         Random rand = new Random();

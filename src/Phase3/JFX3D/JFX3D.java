@@ -119,8 +119,8 @@ public class JFX3D extends Application {
             }
 
             if(greedyButton.isSelected()){
-//                this.render(new GreedySearch());
-                new GreedySearch().run();
+                this.render(new GreedySearch());
+//                new GreedySearch().run();
             }
 
             if(algoXButton.isSelected()){
