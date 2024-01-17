@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Random;
 
 public class GreedySearch implements Renderable{
-    static Grid grid = new Grid(33, 5, 8);
-    static UnitDatabase database;
+    private Grid grid = new Grid(33, 5, 8);
 
-    static Grid greedySearch(UnitDatabase database) {
+    public Grid greedySearch(UnitDatabase database) {
+        grid = new Grid(33, 5, 8);
         int numberOfIterations = 1000000;
-        int count = 1;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
@@ -41,7 +40,7 @@ public class GreedySearch implements Renderable{
         }
         return grid;
     }
-    static int findPlacement(int x, int y, int z, UnitDatabase database) {
+    private int findPlacement(int x, int y, int z, UnitDatabase database) {
         int j = 0;
         for (int i = 0; i < database.getBlockArrayList().size(); i++) {
             if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(i))) {
@@ -60,12 +59,6 @@ public class GreedySearch implements Renderable{
             blocks.set(i, a);
         }
     }
-//    public void run() {
-//        greedySearch();
-//    }
-//    public int[][][] getData(){
-//        return greedySearch().grid;
-//    }
 
     @Override
     public int[][][] getData(UnitDatabase database) {

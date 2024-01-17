@@ -4,11 +4,10 @@ import Phase3.JFX3D.Renderable;
 import java.util.Random;
 
 public class RandomSearch implements Renderable {
-    public Grid grid = new Grid(33, 5, 8);
+    private Grid grid = new Grid(33, 5, 8);
 
     public Grid randomSearch(UnitDatabase database) {
         int numberOfIterations = 1000000;
-        int count = 1;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
