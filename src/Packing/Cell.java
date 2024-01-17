@@ -52,4 +52,14 @@ public class Cell implements Comparable<Cell> {
     public String toString() {
         return "(" + this.x + ", " + this.y + ", " + this.z + ")";
     }
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public int getZ() {
+        return z;
+    }
 }
