@@ -7,9 +7,9 @@ import java.util.Random;
 
 public class GreedySearch implements Renderable{
     static Grid grid = new Grid(33, 5, 8);
-    static Database database = new Database();
+    static UnitDatabase database;
 
-    static Grid greedySearch() {
+    static Grid greedySearch(UnitDatabase database) {
         int numberOfIterations = 1000000;
         int count = 1;
 
@@ -27,8 +27,8 @@ public class GreedySearch implements Renderable{
 
                 int blockIndex = findPlacement(x, y, z, database);
 
-                if (grid.validPlacement(x, y, z, database.blockArrayList.get(blockIndex))) {
-                    grid.placeBlock(x, y, z, database.blockArrayList.get(blockIndex), count++);
+                if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(blockIndex))) {
+                    grid.placeBlock(x, y, z, database.getBlockArrayList().get(blockIndex));
                     foundPlacement = true;
                     break;
                 }
@@ -41,10 +41,10 @@ public class GreedySearch implements Renderable{
         }
         return grid;
     }
-    static int findPlacement(int x, int y, int z, Database database) {
+    static int findPlacement(int x, int y, int z, UnitDatabase database) {
         int j = 0;
-        for (int i = 0; i < database.blockArrayList.size(); i++) {
-            if (grid.validPlacement(x, y, z, database.blockArrayList.get(i))) {
+        for (int i = 0; i < database.getBlockArrayList().size(); i++) {
+            if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(i))) {
                 j = i;
             }
         }
@@ -60,12 +60,21 @@ public class GreedySearch implements Renderable{
             blocks.set(i, a);
         }
     }
-    public void run() {
-        greedySearch();
-    }
-    public int[][][] getData(){
-        return greedySearch().grid;
+//    public void run() {
+//        greedySearch();
+//    }
+//    public int[][][] getData(){
+//        return greedySearch().grid;
+//    }
+
+    @Override
+    public int[][][] getData(UnitDatabase database) {
+        return greedySearch(database).grid;
     }
 
+    @Override
+    public int getScore() {
+        return 0;
+    }
 }
 
