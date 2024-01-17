@@ -2,7 +2,6 @@ package Packing;
 import Phase3.JFX3D.Renderable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class GreedySearch implements Renderable {
     public Grid grid = new Grid(33, 5, 8);

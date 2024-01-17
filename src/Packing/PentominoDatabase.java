@@ -73,7 +73,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // returns true if this rotation is already included, so we remove identical rotation matrices
-    private boolean arrayIncludes(ArrayList<int[][][]> p , int[][][] piece){
+    private static boolean arrayIncludes(ArrayList<int[][][]> p, int[][][] piece){
 
         for(int[][][] perm : p){
             int x_len = perm.length, y_len  =perm[0].length, z_len = perm[0][0].length;
@@ -94,7 +94,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // clones 3D array
-    public int[][][] clone_piece(int[][][] piece){
+    public static int[][][] clone_piece(int[][][] piece){
 
         int[][][] clone = new int[piece.length][piece[0].length][piece[0][0].length];
         for(int x = 0; x != piece.length; ++x){
@@ -108,7 +108,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // takes one starting 3D matrix of a piece and generated array of all 3D rotations of that piece
-    public int[][][][] build_piece(int[][][] piece){
+    public static int[][][][] build_piece(int[][][] piece){
         ArrayList<int[][][]> permutations = new ArrayList<int[][][]>(24);
 
         // first four possible way how to face a cube/ 3D array
@@ -147,7 +147,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
     
     // rotates around X axis
-    private int[][][] flipAxisX(int[][][] piece){
+    private static int[][][] flipAxisX(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece.length][piece[0][0].length][piece[0].length];
 
@@ -162,7 +162,7 @@ public class PentominoDatabase implements UnitDatabase {
         return rotated_piece;
     }
     //rotates around Y axis
-    private int[][][] flipAxisY(int[][][] piece){
+    private static int[][][] flipAxisY(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece[0][0].length][piece[0].length][piece.length];
 
@@ -177,7 +177,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // rotates around Z axis
-    private int[][][] rotateAroundZ(int[][][] piece){
+    private static int[][][] rotateAroundZ(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece[0].length][piece.length][piece[0][0].length];
 
