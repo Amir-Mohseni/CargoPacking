@@ -1,6 +1,6 @@
 package Phase3.JFX3D;
 
-import Packing.RandomSearch;
+import Packing.UnitDatabase;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -10,7 +10,6 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
@@ -21,13 +20,14 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
+
+import static Phase3.JFX3D.Settings.Window.*;
 
 public class JFX3D extends Application {
-    public static final int WIDTH = Settings.Window.WINDOW_WIDTH, HEIGHT = Settings.Window.WINDOW_HEIGHT;
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
@@ -39,8 +39,8 @@ public class JFX3D extends Application {
     private Stage stage;
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
-    private String selectedAlgo;
-    private String selectedFilling;
+    private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
+    private Constants.Settings.ParcelSettings.Parcel selectedFilling;
     private final Map<Integer, String> colorMap = new HashMap<>();
     private int value1, value2, value3;
     private int quantity1, quantity2, quantity3;
@@ -56,7 +56,7 @@ public class JFX3D extends Application {
         this.rg = new RotatorGroup();
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
 
-        SubScene scene = new SubScene(rg, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
+        SubScene scene = new SubScene(rg, CONTENT_WINDOW_WIDTH, CONTENT_WINDOW_HEIGHT, true, SceneAntialiasing.BALANCED);
 
         this.bp.setCenter(scene);
 
@@ -83,7 +83,7 @@ public class JFX3D extends Application {
     }
 
     private void setupUI(){
-        Scene mainScene = new Scene(this.bp, WIDTH, HEIGHT);
+        Scene mainScene = new Scene(this.bp, MENU_WINDOW_WIDTH, MENU_WINDOW_HEIGHT);
         stage.setScene(mainScene);
 
 
@@ -100,6 +100,7 @@ public class JFX3D extends Application {
         Menu algorithmMenu = new Menu("Algorithms");
         MenuItem random = new MenuItem("Random");
         MenuItem greedy = new MenuItem("Greedy");
+        MenuItem genetic = new MenuItem("Genetic");
         MenuItem algoX = new MenuItem("Algorithm X");
 
 
@@ -120,8 +121,8 @@ public class JFX3D extends Application {
         setWidthOfMenuBar(100,menuBar2);
 
 
-        Label selectedAlgorithm = new Label();
-        Label selectedParcel = new Label();
+        Label selectedAlgorithmLabel = new Label();
+        Label selectedParcelLabel = new Label();
 
 
         Label valuesLabel = new Label("Values");
@@ -163,12 +164,12 @@ public class JFX3D extends Application {
 
 
         HBox algorithmMenuGroup = new HBox();
-        algorithmMenuGroup.getChildren().addAll(menuBar1,selectedAlgorithm);
+        algorithmMenuGroup.getChildren().addAll(menuBar1,selectedAlgorithmLabel);
         algorithmMenuGroup.setAlignment(Pos.CENTER);
         algorithmMenuGroup.setSpacing(10);
 
         HBox parcelMenuGroup = new HBox();
-        parcelMenuGroup.getChildren().addAll(menuBar2,selectedParcel);
+        parcelMenuGroup.getChildren().addAll(menuBar2,selectedParcelLabel);
         parcelMenuGroup.setAlignment(Pos.CENTER);
         parcelMenuGroup.setSpacing(10);
 
@@ -216,18 +217,16 @@ public class JFX3D extends Application {
 
         //ActionListener for StartButton
         startButton.setOnAction(e ->{
-            if(selectedAlgo.equals("Random")){
-                System.out.println(selectedAlgo);
-                this.render(new RandomSearch());
-            }
-            if(selectedAlgo.equals("Greedy")){
-                System.out.println(selectedAlgo);
-            }
-            if(selectedAlgo.equals("Algo X")){
-                System.out.println(selectedAlgo);
-            }
-            if(selectedAlgo == null){
-                System.out.println("No option has been selected");
+            try {
+                this.render((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance(), (UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance());
+            } catch (InstantiationException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
             }
 
             System.out.println("Values: "+value1+", "+value2+", "+value3);
@@ -237,26 +236,30 @@ public class JFX3D extends Application {
 
         //ActionListeners for updating the testAre with the selected algorithm
         random.setOnAction(e->{
-            selectedAlgo = "Random";
-            selectedAlgorithm.setText(selectedAlgo);
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
         });
         greedy.setOnAction(e->{
-            selectedAlgo = "Greedy";
-            selectedAlgorithm.setText(selectedAlgo);
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GREEDY;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
+        genetic.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GENETIC;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
         });
         algoX.setOnAction(e->{
-            selectedAlgo = "Algo X";
-            selectedAlgorithm.setText(selectedAlgo);
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.ALGORITHM_X;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
         });
 
         //ActionListeners for updating the textArea with the selected parcel type
         pentominoes.setOnAction(e->{
-            selectedFilling = "Pentominoes";
-            selectedParcel.setText(selectedFilling);
+            selectedFilling = Constants.Settings.ParcelSettings.Parcel.PENTOMINOES;
+            selectedParcelLabel.setText(selectedFilling.getName());
         });
         cubes.setOnAction(e->{
-            selectedFilling = "Cubes";
-            selectedParcel.setText(selectedFilling);
+            selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
+            selectedParcelLabel.setText(selectedFilling.getName());
         });
 
         //TODO: Set ActionListener for the currentScoreLabel
@@ -320,9 +323,9 @@ public class JFX3D extends Application {
         scrollBar.setMax(max);
     }
 
-    private void render(Renderable renderable){
+    private void render(Renderable renderable, UnitDatabase database){
         this.setupRender();
-        this.draw3D(renderable.getData());
+        this.draw3D(renderable.getData(database));
     }
 
     private void draw3D(int[][][] data) {

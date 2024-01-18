@@ -28,7 +28,8 @@ public class Constants {
             public enum Algorithm {
                 RANDOM(RandomSearch.class,"Random"),
                 GREEDY(GreedySearch.class, "Greedy"),
-                ALGORITHM_X(null,"Algorithm X");
+                ALGORITHM_X(null,"Algorithm X"),
+                GENETIC(null, "Genetic");
 
                 private final String name;
                 private final Class renderable;
@@ -46,8 +47,11 @@ public class Constants {
                     return name.equals(otherName);
                 }
 
-                public String toString() {
+                public String getName() {
                     return this.name;
+                }
+                public String toString() {
+                    return this.getName();
                 }
             }
         }
@@ -75,8 +79,11 @@ public class Constants {
                     return name.equals(otherName);
                 }
 
-                public String toString() {
+                public String getName() {
                     return this.name;
+                }
+                public String toString() {
+                    return this.getName();
                 }
             }
         }
