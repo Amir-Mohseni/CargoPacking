@@ -54,7 +54,12 @@ public class JFX3D extends Application {
     }
 
     private void setupScenes(){
-
+        this.borderPane = new BorderPane();
+        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
+        renderStage.setScene(mainScene);
+        renderStage.setTitle(Constants.Windows.RENDER_WINDOW_TITLE);
+        renderStage.setOnCloseRequest(t -> System.exit(0));
+        renderStage.show();
 
         Scene menuScene = new Scene(this.menuPane, Settings.Window.MENU_WINDOW_WIDTH, Settings.Window.MENU_WINDOW_HEIGHT);
         menuStage.setScene(menuScene);
@@ -64,12 +69,6 @@ public class JFX3D extends Application {
     }
 
     private void setupRender(){
-        this.borderPane = new BorderPane();
-        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
-        renderStage.setScene(mainScene);
-        renderStage.setTitle(Constants.Windows.RENDER_WINDOW_TITLE);
-        renderStage.setOnCloseRequest(t -> System.exit(0));
-        renderStage.show();
 
         this.rotatorGroup = new RotatorGroup();
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
