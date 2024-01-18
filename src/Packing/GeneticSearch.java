@@ -8,12 +8,17 @@ import java.util.Comparator;
 
 public class GeneticSearch implements Renderable {
     int populationSize = 1000;
-    int maxGenerations = 200;
+    int maxGenerations = 100;
     int maxNumberOfEachBlock;
     Gene[] population;
 
     Grid geneticSearch(UnitDatabase database) {
-        this.maxNumberOfEachBlock = 80;
+        //If the data is pentominoes, the max number of each block is 264 and otherwise, it is 80
+        if (database.getBlockArrayList().size() > 10)
+            this.maxNumberOfEachBlock = 264;
+        else
+            this.maxNumberOfEachBlock = 80;
+
         population = new Gene[populationSize];
 
         for (int i = 0; i < populationSize; i++)
