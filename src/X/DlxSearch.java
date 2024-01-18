@@ -17,7 +17,9 @@ public class DlxSearch implements Renderable{
         Object solver;
         if(database.getBlockArrayList().size() > 10)
             solver = new CargoX(33,8,5,PentominoDatabase.database);
-        else solver = new CargoX(33, 8, 5, ParcelDatabase.database);
+        else {
+            solver = new CargoX(33, 8, 5, ParcelDatabase.database);
+        }
 
 
         LinkedList<N.RNode> solution_stack = ((CargoX) solver).solvePacking();
