@@ -32,10 +32,40 @@ public class GeneticSearch implements Renderable {
             //Pick the top 10% of the population
             System.arraycopy(population, 0, newPopulation, 0, populationSize / 100);
 
+            double[] fitnessArr = new double[populationSize];
+            double sum = 0;
+            for (int j = 0; j < populationSize; j++) {
+                fitnessArr[j] = population[j].fitness();
+                sum += fitnessArr[j];
+            }
+
+            //Normalize fitness
+            for (int j = 0; j < populationSize; j++) {
+                fitnessArr[j] /= sum;
+            }
+
             for (int j = populationSize / 100; j < populationSize; j++) {
-                //Parent selection
-                int parentIndex1 = Gene.randomInt(populationSize);
-                int parentIndex2 = Gene.randomInt(populationSize);
+                //Parent selection based on their fitness
+                double random1 = Math.random();
+                double random2 = Math.random();
+
+                int parentIndex1 = populationSize - 1, parentIndex2 = populationSize - 1;
+
+                for (int k = 0; k < populationSize; k++) {
+                    if (random1 < fitnessArr[k]) {
+                        parentIndex1 = k;
+                        break;
+                    }
+                    random1 -= fitnessArr[k];
+                }
+
+                for (int k = 0; k < populationSize; k++) {
+                    if (random2 < fitnessArr[k]) {
+                        parentIndex2 = k;
+                        break;
+                    }
+                    random2 -= fitnessArr[k];
+                }
 
                 Gene parent1 = population[parentIndex1];
                 Gene parent2 = population[parentIndex2];
