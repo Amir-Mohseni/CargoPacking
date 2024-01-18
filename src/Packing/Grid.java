@@ -13,7 +13,7 @@ public class Grid {
 
     TreeSet <Cell> emptyCells = new TreeSet<>();
 
-    Grid(int nX, int nY, int nZ) {
+    public Grid(int nX, int nY, int nZ) {
         this.nX = nX;
         this.nY = nY;
         this.nZ = nZ;

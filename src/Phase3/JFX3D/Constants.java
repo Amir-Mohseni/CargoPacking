@@ -28,7 +28,7 @@ public class Constants {
             public enum Algorithm {
                 RANDOM(RandomSearch.class,"Random"),
                 GREEDY(GreedySearch.class, "Greedy"),
-                ALGORITHM_X(null,"Algorithm X"),
+                ALGORITHM_X(X.DlxSearch.class,"Algorithm X"),
                 GENETIC(GeneticSearch.class, "Genetic");
 
                 private final String name;

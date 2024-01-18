@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class GeneticSearch implements Renderable {
-    int populationSize = 1000;
-    int maxGenerations = 100;
+    int populationSize = 5000;
+    int maxGenerations = 50;
     int maxNumberOfEachBlock;
     Gene[] population;
 
