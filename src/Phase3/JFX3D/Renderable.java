@@ -4,5 +4,6 @@ import Packing.UnitDatabase;
 
 public interface Renderable {
     int[][][] getData(UnitDatabase database);
+    int[][][] getData(UnitDatabase database, Updatable updatable);
     int getScore();
 }

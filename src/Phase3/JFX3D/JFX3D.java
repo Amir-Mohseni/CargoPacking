@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class JFX3D extends Application {
+public class JFX3D extends Application implements Updatable {
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
@@ -326,7 +326,7 @@ public class JFX3D extends Application {
 
         stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added. TODO
         resetButton.setOnAction(e -> this.setupRender());
-        this.menuPane.setLeft(mainGroup);
+        this.menuPane.setCenter(mainGroup);
     }
 
     public void setWidthOfTextField(int width, TextField textField){
@@ -344,8 +344,13 @@ public class JFX3D extends Application {
     }
 
     private void render(Renderable renderable, UnitDatabase database){
+        this.update(renderable.getData(database));
+    }
+
+    @Override
+    public void update(int[][][] data) {
         this.setupRender();
-        this.draw3D(renderable.getData(database));
+        this.draw3D(data);
     }
 
     private void draw3D(int[][][] data) {
