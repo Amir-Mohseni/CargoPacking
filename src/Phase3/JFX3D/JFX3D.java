@@ -1,6 +1,6 @@
 package Phase3.JFX3D;
 
-import Packing.*;
+import Packing.UnitDatabase;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -10,7 +10,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
@@ -24,7 +24,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Random;
 
-public class JFX3D extends Application {
+
+public class JFX3D extends Application implements Updatable {
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private double anchorX, anchorY;
@@ -33,6 +34,7 @@ public class JFX3D extends Application {
 
     private BorderPane borderPane = new BorderPane();
     private final BorderPane menuPane = new BorderPane();
+
     private RotatorGroup rotatorGroup = new RotatorGroup();
     private Stage renderStage;
     private Stage menuStage = new Stage();
@@ -40,7 +42,6 @@ public class JFX3D extends Application {
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
     private Constants.Settings.ParcelSettings.Parcel selectedFilling;
-//    private final Map<Integer, String> colorMap = new HashMap<>();
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
     private int value1, value2, value3;
     private int quantity1, quantity2, quantity3;
@@ -54,7 +55,12 @@ public class JFX3D extends Application {
     }
 
     private void setupScenes(){
-
+        this.borderPane = new BorderPane();
+        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
+        renderStage.setScene(mainScene);
+        renderStage.setTitle(Constants.Windows.RENDER_WINDOW_TITLE);
+        renderStage.setOnCloseRequest(t -> System.exit(0));
+        renderStage.show();
 
         Scene menuScene = new Scene(this.menuPane, Settings.Window.MENU_WINDOW_WIDTH, Settings.Window.MENU_WINDOW_HEIGHT);
         menuStage.setScene(menuScene);
@@ -64,12 +70,6 @@ public class JFX3D extends Application {
     }
 
     private void setupRender(){
-        this.borderPane = new BorderPane();
-        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
-        renderStage.setScene(mainScene);
-        renderStage.setTitle(Constants.Windows.RENDER_WINDOW_TITLE);
-        renderStage.setOnCloseRequest(t -> System.exit(0));
-        renderStage.show();
 
         this.rotatorGroup = new RotatorGroup();
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
@@ -97,59 +97,52 @@ public class JFX3D extends Application {
 
     }
 
+
     private void setupUI(){
-        VBox column = new VBox();
-        column.setSpacing(10);
-        column.setAlignment(Pos.CENTER);
-
-        GridPane leftPane = new GridPane();
-        //leftPane.setSpacing(20);
-       // leftPane.setPrefSize(200,300);
-        leftPane.setAlignment(Pos.CENTER);
-        leftPane.setPadding(new Insets(10));
-        leftPane.setHgap(10);
-        leftPane.setVgap(10);
-
-
-        Button startButton = new Button(Constants.Settings.Buttons.START_BUTTON_TEXT);
+        Button startButton = new Button("Start");
         startButton.setPrefSize(50,10);
-        Button stopButton = new Button(Constants.Settings.Buttons.STOP_BUTTON_TEXT);
+        Button stopButton = new Button("Stop");
         stopButton.setPrefSize(50,10);
-        Button resetButton = new Button(Constants.Settings.Buttons.RESET_BUTTON_TEXT);
+        Button resetButton = new Button("Reset");
         resetButton.setPrefSize(50,10);
 
-        Label label1 = new Label(Constants.Settings.Title.UI_DISPLAY_TITLE_TEXT);
-        label1.setFont(Font.font(Constants.Settings.Title.UI_DISPLAY_TITLE_FONT, Constants.Settings.Title.UI_DISPLAY_TITLE_WEIGHT, Constants.Settings.Title.UI_DISPLAY_TITLE_SIZE));
-        //leftPane.getChildren().add(label1);
+        Label label1 = new Label("3D PACKING SOLVER");
+        label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
 
-        Menu algorithmMenu = new Menu(Constants.Settings.AlgorithmSettings.ALGORITHM_MENU_TEXT);
-        MenuItem random = new MenuItem(Constants.Settings.AlgorithmSettings.Algorithm.RANDOM.toString());
-        MenuItem greedy = new MenuItem(Constants.Settings.AlgorithmSettings.Algorithm.GREEDY.toString());
-        MenuItem algoX = new MenuItem(Constants.Settings.AlgorithmSettings.Algorithm.ALGORITHM_X.toString());
+        Menu algorithmMenu = new Menu("Algorithms");
+        MenuItem random = new MenuItem("Random");
+        MenuItem greedy = new MenuItem("Greedy");
+        MenuItem genetic = new MenuItem("Genetic");
+        MenuItem algoX = new MenuItem("Algorithm X");
 
-        random.setOnAction(e->{this.selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;});
-        greedy.setOnAction(e->{this.selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GREEDY;});
-        algoX.setOnAction(e->{this.selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.ALGORITHM_X;});
-        algorithmMenu.getItems().addAll(random,greedy,algoX);
+
+        algorithmMenu.getItems().addAll(
+                random,
+                greedy,
+                genetic,
+                algoX
+        );
 
         MenuBar menuBar1 = new MenuBar();
         menuBar1.getMenus().add(algorithmMenu);
         setWidthOfMenuBar(100,menuBar1);
-        //leftPane.getChildren().add(menuBar1);
 
-        Menu typeOfFilling = new Menu(Constants.Settings.ParcelSettings.PARCEL_MENU_TEXT);
-        MenuItem pentominoes = new MenuItem(Constants.Settings.ParcelSettings.Parcel.PENTOMINOES.toString());
-        MenuItem cubes = new MenuItem(Constants.Settings.ParcelSettings.Parcel.BOXES.toString());
+        Menu typeOfFilling = new Menu("Parcels");
+        MenuItem pentominoes = new MenuItem("Pentominoes");
+        MenuItem boxes = new MenuItem("Boxes");
 
-        pentominoes.setOnAction(e->{selectedFilling = Constants.Settings.ParcelSettings.Parcel.PENTOMINOES;});
-        cubes.setOnAction(e->{selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;});
-
-        typeOfFilling.getItems().addAll(pentominoes,cubes);
+        typeOfFilling.getItems().addAll(
+                pentominoes,
+                boxes
+        );
 
         MenuBar menuBar2 = new MenuBar();
         menuBar2.getMenus().add(typeOfFilling);
         setWidthOfMenuBar(100,menuBar2);
-        //leftPane.getChildren().add(menuBar2);
+
+
+        Label selectedAlgorithmLabel = new Label();
+        Label selectedParcelLabel = new Label();
 
 
         Label valuesLabel = new Label("Values");
@@ -172,42 +165,80 @@ public class JFX3D extends Application {
         setWidthOfTextField(50,quantityText2);
         setWidthOfTextField(50,quantityText3);
 
-        //leftPane.getChildren().addAll(valuesLabel,valueText1,valueText2,valueText3);
-        //leftPane.getChildren().addAll(quantityLabel,quantityText1,quantityText2,quantityText3);
+
+        Label scoreLabel = new Label("Score:");
+        scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD,12));
+        Label currentScoreLabel = new Label();
+
+        ScrollBar scrollBarX = new ScrollBar();
+        ScrollBar scrollBarY = new ScrollBar();
+        ScrollBar scrollBarZ = new ScrollBar();
+
+        setParametersScrollBar(scrollBarX,0,200);
+        setParametersScrollBar(scrollBarY,0,200);
+        setParametersScrollBar(scrollBarZ,0,200);
+
+        Label scrollerLabelX = new Label("X axis");
+        Label scrollerLabelY = new Label("Y axis");
+        Label scrollerLabelZ = new Label("Z axis");
 
 
-        //leftPane.getChildren().addAll(startButton,stopButton,resetButton);
+        HBox algorithmMenuGroup = new HBox();
+        algorithmMenuGroup.getChildren().addAll(menuBar1,selectedAlgorithmLabel);
+        algorithmMenuGroup.setAlignment(Pos.CENTER);
+        algorithmMenuGroup.setSpacing(10);
 
+        HBox parcelMenuGroup = new HBox();
+        parcelMenuGroup.getChildren().addAll(menuBar2,selectedParcelLabel);
+        parcelMenuGroup.setAlignment(Pos.CENTER);
+        parcelMenuGroup.setSpacing(10);
 
-        Label label6 = new Label("Score:");
-        label6.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label scoreLabel = new Label("_");
+        HBox valuesTextFieldGroup = new HBox();
+        valuesTextFieldGroup.getChildren().addAll(valueText1,valueText2,valueText3);
+        valuesTextFieldGroup.setAlignment(Pos.CENTER);
+        valuesTextFieldGroup.setSpacing(10);
 
-        //leftPane.getChildren().addAll(label6,scoreLabel);
+        HBox quantityTextFieldGroup = new HBox();
+        quantityTextFieldGroup.getChildren().addAll(quantityText1,quantityText2,quantityText3);
+        quantityTextFieldGroup.setAlignment(Pos.CENTER);
+        quantityTextFieldGroup.setSpacing(10);
 
-        leftPane.add(label1,1,0);
-        leftPane.add(menuBar1,1,1);
-        leftPane.add(menuBar2,1,2);
+        HBox scoreGroup = new HBox();
+        scoreGroup.getChildren().addAll(scoreLabel,currentScoreLabel);
+        scoreGroup.setAlignment(Pos.CENTER);
+        scoreGroup.setSpacing(10);
 
-        leftPane.add(valuesLabel,0,3);
-        leftPane.add(valueText1,0,4);
-        leftPane.add(valueText2,1,4);
-        leftPane.add(valueText3,2,4);
-        leftPane.add(quantityLabel,0,5);
-        leftPane.add(quantityText1,0,6);
-        leftPane.add(quantityText2,1,6);
-        leftPane.add(quantityText3,2,6);
-        leftPane.add(startButton,0,7);
-        leftPane.add(stopButton,1,7);
-        leftPane.add(resetButton,2,7);
-        leftPane.add(label6,0,8);
-        leftPane.add(scoreLabel,1,8);
+        HBox buttonsGroup = new HBox();
+        buttonsGroup.getChildren().addAll(startButton,stopButton,resetButton);
+        buttonsGroup.setAlignment(Pos.CENTER);
+        buttonsGroup.setSpacing(10);
 
-        //column.getChildren().addAll(label1,menuBar1,menuBar2,leftPane);
+        HBox scrollerXGroup = new HBox();
+        scrollerXGroup.getChildren().addAll(scrollerLabelX,scrollBarX);
+        scrollerXGroup.setAlignment(Pos.CENTER);
+        scrollerXGroup.setSpacing(10);
 
+        HBox scrollerYGroup = new HBox();
+        scrollerYGroup.getChildren().addAll(scrollerLabelY,scrollBarY);
+        scrollerYGroup.setAlignment(Pos.CENTER);
+        scrollerYGroup.setSpacing(10);
+
+        HBox scrollerZGroup = new HBox();
+        scrollerZGroup.getChildren().addAll(scrollerLabelZ,scrollBarZ);
+        scrollerZGroup.setAlignment(Pos.CENTER);
+        scrollerZGroup.setSpacing(10);
+
+        VBox mainGroup = new VBox();
+        mainGroup.getChildren().addAll(label1,algorithmMenuGroup,parcelMenuGroup,valuesLabel,valuesTextFieldGroup,quantityLabel,quantityTextFieldGroup,
+        buttonsGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
+        mainGroup.setAlignment(Pos.CENTER);
+        mainGroup.setPadding(new Insets(10));
+        mainGroup.setSpacing(15);
+
+        //ActionListener for StartButton
         startButton.setOnAction(e ->{
             try {
-                this.render((Renderable) selectedAlgo.getRenderable().getConstructor().newInstance(), (UnitDatabase) selectedFilling.getDatabase().getConstructor().newInstance());
+                this.render((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance(), (UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance());
             } catch (InstantiationException ex) {
                 throw new RuntimeException(ex);
             } catch (IllegalAccessException ex) {
@@ -218,40 +249,84 @@ public class JFX3D extends Application {
                 throw new RuntimeException(ex);
             }
 
-            //For retrieving the input from the TextFields for values
-            String valuesText1 = valueText1.getText();
-            String valuesText2 = valueText2.getText();
-            String valuesText3 = valueText3.getText();
-
-            if(!valuesText1.isEmpty() && !valuesText2.isEmpty() && !valuesText3.isEmpty()){
-                value1 = Integer.parseInt(valuesText1);
-                value2 = Integer.parseInt(valuesText2);
-                value3 = Integer.parseInt(valuesText3);
-                System.out.println("Values: "+value1+", "+value2+", "+value3);
-            } else {
-                System.out.println("Values not entered");
-            }
-
-            //For retrieving the input from Quantity TextFields
-
-            String quantityString1 = quantityText1.getText();
-            String quantityString2 = quantityText2.getText();
-            String quantityString3 = quantityText3.getText();
-
-            if(!quantityString1.isEmpty() && !quantityString2.isEmpty() && !quantityString3.isEmpty()){
-                quantity1 = Integer.parseInt(quantityString1);
-                quantity2 = Integer.parseInt(quantityString2);
-                quantity3 = Integer.parseInt(quantityString3);
-                System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
-            } else{
-                System.out.println("Quantities not entered");
-            }
+            System.out.println("Values: "+value1+", "+value2+", "+value3);
+            System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
 
         });
-        stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added.
-        resetButton.setOnAction(e -> this.setupRender());
 
-        this.menuPane.setLeft(leftPane);
+        //ActionListeners for updating the testAre with the selected algorithm
+        random.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
+        greedy.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GREEDY;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
+        genetic.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GENETIC;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
+        algoX.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.ALGORITHM_X;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
+
+        //ActionListeners for updating the textArea with the selected parcel type
+        pentominoes.setOnAction(e->{
+            selectedFilling = Constants.Settings.ParcelSettings.Parcel.PENTOMINOES;
+            selectedParcelLabel.setText(selectedFilling.getName());
+        });
+        boxes.setOnAction(e->{
+            selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
+            selectedParcelLabel.setText(selectedFilling.getName());
+        });
+
+        //TODO: Set ActionListener for the currentScoreLabel
+
+        //ActionListeners for getting the text from the value text cells
+        valueText1.setOnAction(e->{
+            String text = valueText1.getText();
+            if(!text.isEmpty()){value1 = Integer.parseInt(text);}
+        });
+        valueText2.setOnAction(e->{
+            String text = valueText2.getText();
+            if(!text.isEmpty()){value2 = Integer.parseInt(text);}
+        });
+        valueText3.setOnAction(e->{
+            String text = valueText3.getText();
+            if(!text.isEmpty()){value3 = Integer.parseInt(text);}
+        });
+
+        //ActionListeners for getting the text from the quantity text cells
+        quantityText1.setOnAction(e->{
+            String text = quantityText1.getText();
+            if(!text.isEmpty()){quantity1 = Integer.parseInt(text);}
+        });
+        quantityText2.setOnAction(e->{
+            String text = quantityText2.getText();
+            if(!text.isEmpty()){quantity2 = Integer.parseInt(text);}
+        });
+        quantityText3.setOnAction(e->{
+            String text = quantityText3.getText();
+            if(!text.isEmpty()){quantity3 = Integer.parseInt(text);}
+        });
+
+        //ActionListeners for getting the current positions of each scroller
+        scrollBarX.valueProperty().addListener((observable,oldValue,newValue)->{
+            System.out.println("Current position of ScrollBarX: "+newValue);
+        });
+        scrollBarY.valueProperty().addListener((observable,oldValue,newValue)->{
+            System.out.println("Current position of ScrollBarY: "+newValue);
+        });
+        scrollBarZ.valueProperty().addListener((observable,oldValue,newValue)->{
+            System.out.println("Current position of ScrollBarZ: "+newValue);
+        });
+
+
+        stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added. TODO
+        resetButton.setOnAction(e -> this.setupRender());
+        this.menuPane.setCenter(mainGroup);
     }
 
     public void setWidthOfTextField(int width, TextField textField){
@@ -263,10 +338,19 @@ public class JFX3D extends Application {
         menuBar.setPrefWidth(width);
         menuBar.setMaxWidth(width);
     }
+    public void setParametersScrollBar(ScrollBar scrollBar, double min, double max){
+        scrollBar.setMin(min);
+        scrollBar.setMax(max);
+    }
 
     private void render(Renderable renderable, UnitDatabase database){
+        this.update(renderable.getData(database));
+    }
+
+    @Override
+    public void update(int[][][] data) {
         this.setupRender();
-        this.draw3D(renderable.getData(database));
+        this.draw3D(data);
     }
 
     private void draw3D(int[][][] data) {

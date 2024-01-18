@@ -1,50 +1,79 @@
 package Packing;
 import Phase3.JFX3D.Renderable;
+import Phase3.JFX3D.Updatable;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class GreedySearch implements Renderable {
-    public Grid grid = new Grid(33, 5, 8);
+public class GreedySearch implements Renderable{
+    private Grid grid = new Grid(33, 5, 8);
 
     public Grid greedySearch(UnitDatabase database) {
+        grid = new Grid(33, 5, 8);
+        int numberOfIterations = 1000000;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
-        while(!grid.emptyCells.isEmpty()) {
-            ArrayList <int[]> options = new ArrayList<>();
-            Cell emptyCell = grid.emptyCells.getFirst();
-            grid.emptyCells.remove(emptyCell);
-            for (int blockIndex = 0; blockIndex < database.getBlockArrayList().size(); blockIndex++) {
-                int x = emptyCell.x;
-                int y = emptyCell.y;
-                int z = emptyCell.z;
+        for (int i = 0; i < numberOfIterations; i++) {
+
+            boolean foundPlacement = false;
+
+            //method to iterate through all empty cells
+            for (Cell cell : grid.emptyCells) {
+                int x = cell.getX();
+                int y = cell.getY();
+                int z = cell.getZ();
+
+                int blockIndex = findPlacement(x, y, z, database);
 
                 if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(blockIndex))) {
-                    options.add(new int[]{database.getBlockArrayList().get(blockIndex).getValue(), x, y, z, blockIndex});
-//                    grid.placeBlock(x, y, z, database.getBlockArrayList().get(blockIndex));
-//                    break;
+                    grid.placeBlock(x, y, z, database.getBlockArrayList().get(blockIndex));
+                    foundPlacement = true;
+                    break;
                 }
             }
-            //sort options by first element, bigger first
-            if(!options.isEmpty()) {
-                options.sort((o1, o2) -> o2[0] - o1[0]);
-                System.out.println(options.get(0)[0]);
-                grid.placeBlock(options.get(0)[1], options.get(0)[2], options.get(0)[3], database.getBlockArrayList().get(options.get(0)[4]));
+
+            System.out.println("Number of empty spaces is: " + grid.emptyCells.size());
+
+            if (!foundPlacement)
+                break;
+        }
+        return grid;
+    }
+    private int findPlacement(int x, int y, int z, UnitDatabase database) {
+        int j = 0;
+        for (int i = 0; i < database.getBlockArrayList().size(); i++) {
+            if (grid.validPlacement(x, y, z, database.getBlockArrayList().get(i))) {
+                j = i;
             }
         }
-        System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
-        System.out.println("Score: " + grid.score);
-        return grid;
+        return j;
+    }
+    static void shuffle(List<Block> blocks) {
+        Random rand = new Random();
+        for (int i = blocks.size() - 1; i > 0; i--) {
+            int index = rand.nextInt(i + 1);
+            // Simple swap
+            Block a = blocks.get(index);
+            blocks.set(index, blocks.get(i));
+            blocks.set(i, a);
+        }
     }
 
     @Override
-    public int[][][] getData(UnitDatabase database){
+    public int[][][] getData(UnitDatabase database) {
+        return greedySearch(database).grid;
+    }
+
+    @Override
+    public int[][][] getData(UnitDatabase database, Updatable updatable) {
         return greedySearch(database).grid;
     }
 
     @Override
     public int getScore() {
-        return grid.score;
+        return 0;
     }
-
 }
+

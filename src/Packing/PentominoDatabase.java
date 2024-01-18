@@ -69,15 +69,15 @@ public class PentominoDatabase implements UnitDatabase {
 
  */
 
-        
+
     }
 
     // returns true if this rotation is already included, so we remove identical rotation matrices
-    private static boolean arrayIncludes(ArrayList<int[][][]> p, int[][][] piece){
+    private boolean arrayIncludes(ArrayList<int[][][]> p , int[][][] piece){
 
         for(int[][][] perm : p){
             int x_len = perm.length, y_len  =perm[0].length, z_len = perm[0][0].length;
-            if(x_len == piece.length && y_len == piece[0].length && z_len == piece[0][0].length){     
+            if(x_len == piece.length && y_len == piece[0].length && z_len == piece[0][0].length){
                 equal: {
                     for(int x = 0; x != x_len; ++x){
                         for(int y = 0; y != y_len; ++y){
@@ -94,7 +94,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // clones 3D array
-    public static int[][][] clone_piece(int[][][] piece){
+    public int[][][] clone_piece(int[][][] piece){
 
         int[][][] clone = new int[piece.length][piece[0].length][piece[0][0].length];
         for(int x = 0; x != piece.length; ++x){
@@ -108,24 +108,24 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // takes one starting 3D matrix of a piece and generated array of all 3D rotations of that piece
-    public static int[][][][] build_piece(int[][][] piece){
+    public int[][][][] build_piece(int[][][] piece){
         ArrayList<int[][][]> permutations = new ArrayList<int[][][]>(24);
 
         // first four possible way how to face a cube/ 3D array
         for(int i = 0; i != 4; ++i){ // the rotations around Y
-            
+
             piece = flipAxisY(piece);
             for(int r = 0; r != 4; ++r){
                 // each facing has four rotations of the other axes
                 piece = rotateAroundZ(piece);
                 // add this rotation ONLY if its not already included
                 if(!arrayIncludes(permutations, piece)){
-                    permutations.add(clone_piece(piece));    
-                } 
+                    permutations.add(clone_piece(piece));
+                }
             }
-            
+
         }
-        
+
         // fift possible way how to face a cube
         piece = flipAxisX(piece);
         for(int r = 0; r != 4; ++r){
@@ -142,12 +142,12 @@ public class PentominoDatabase implements UnitDatabase {
             piece = rotateAroundZ(piece);
             if(!arrayIncludes(permutations, piece)) permutations.add(clone_piece(piece));
         }
-        
+
         return permutations.toArray(new int[permutations.size()][][][]);
     }
-    
+
     // rotates around X axis
-    private static int[][][] flipAxisX(int[][][] piece){
+    private int[][][] flipAxisX(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece.length][piece[0][0].length][piece[0].length];
 
@@ -162,7 +162,7 @@ public class PentominoDatabase implements UnitDatabase {
         return rotated_piece;
     }
     //rotates around Y axis
-    private static int[][][] flipAxisY(int[][][] piece){
+    private int[][][] flipAxisY(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece[0][0].length][piece[0].length][piece.length];
 
@@ -177,7 +177,7 @@ public class PentominoDatabase implements UnitDatabase {
     }
 
     // rotates around Z axis
-    private static int[][][] rotateAroundZ(int[][][] piece){
+    private int[][][] rotateAroundZ(int[][][] piece){
 
         int[][][] rotated_piece = new int[piece[0].length][piece.length][piece[0][0].length];
 
