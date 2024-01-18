@@ -29,7 +29,7 @@ public class Constants {
                 RANDOM(RandomSearch.class,"Random"),
                 GREEDY(GreedySearch.class, "Greedy"),
                 ALGORITHM_X(null,"Algorithm X"),
-                GENETIC(null, "Genetic");
+                GENETIC(GeneticSearch.class, "Genetic");
 
                 private final String name;
                 private final Class renderable;

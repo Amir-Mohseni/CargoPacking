@@ -116,7 +116,12 @@ public class JFX3D extends Application {
         MenuItem algoX = new MenuItem("Algorithm X");
 
 
-        algorithmMenu.getItems().addAll(random,greedy,algoX);
+        algorithmMenu.getItems().addAll(
+                random,
+                greedy,
+                genetic,
+                algoX
+        );
 
         MenuBar menuBar1 = new MenuBar();
         menuBar1.getMenus().add(algorithmMenu);
@@ -126,7 +131,10 @@ public class JFX3D extends Application {
         MenuItem pentominoes = new MenuItem("Pentominoes");
         MenuItem boxes = new MenuItem("Boxes");
 
-        typeOfFilling.getItems().addAll(pentominoes,boxes);
+        typeOfFilling.getItems().addAll(
+                pentominoes,
+                boxes
+        );
 
         MenuBar menuBar2 = new MenuBar();
         menuBar2.getMenus().add(typeOfFilling);
