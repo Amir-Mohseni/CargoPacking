@@ -46,6 +46,8 @@ public class JFX3D extends Application implements Updatable {
     private int value1, value2, value3;
     private int quantity1, quantity2, quantity3;
 
+    private String[] checkBoxOptions = {"Total cover", "Maximize score"};
+
     @Override
     public void start(Stage primaryStage) {
         this.renderStage = primaryStage;
@@ -228,9 +230,23 @@ public class JFX3D extends Application implements Updatable {
         scrollerZGroup.setAlignment(Pos.CENTER);
         scrollerZGroup.setSpacing(10);
 
+
+        Label checkBoxLabel = new Label("Select options:");
+        HBox checkBoxGroup = new HBox();
+
+        RadioButton totalCoverageRadioButton = new RadioButton("Total coverage");
+        RadioButton maximizeScoreRadioButton = new RadioButton("Maximize score");
+        ToggleGroup coverageToggleGroup = new ToggleGroup();
+        totalCoverageRadioButton.setToggleGroup(coverageToggleGroup);
+        maximizeScoreRadioButton.setToggleGroup(coverageToggleGroup);
+
+        checkBoxGroup.getChildren().addAll(totalCoverageRadioButton,maximizeScoreRadioButton);
+        checkBoxGroup.setSpacing(10);
+        checkBoxGroup.setAlignment(Pos.CENTER);
+
         VBox mainGroup = new VBox();
         mainGroup.getChildren().addAll(label1,algorithmMenuGroup,parcelMenuGroup,valuesLabel,valuesTextFieldGroup,quantityLabel,quantityTextFieldGroup,
-        buttonsGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
+        buttonsGroup,checkBoxLabel,checkBoxGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
         mainGroup.setAlignment(Pos.CENTER);
         mainGroup.setPadding(new Insets(10));
         mainGroup.setSpacing(15);
@@ -252,6 +268,18 @@ public class JFX3D extends Application implements Updatable {
             System.out.println("Values: "+value1+", "+value2+", "+value3);
             System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
 
+        });
+
+        totalCoverageRadioButton.setOnAction(e->{
+            if(totalCoverageRadioButton.isSelected()){
+
+            }
+        });
+
+        maximizeScoreRadioButton.setOnAction(e->{
+            if(maximizeScoreRadioButton.isSelected()){
+
+            }
         });
 
         //ActionListeners for updating the testAre with the selected algorithm
