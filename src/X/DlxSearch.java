@@ -56,11 +56,6 @@ public class DlxSearch implements Renderable{
     }
 
     @Override
-    public int[][][] getData(UnitDatabase database) {
-        return dlxSearch(database).grid;
-    }
-
-    @Override
     public int[][][] getData(UnitDatabase database, Updatable updatable) {
         return dlxSearch(database).grid;
     }

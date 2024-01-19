@@ -60,12 +60,6 @@ public class GreedySearch implements Renderable{
             blocks.set(i, a);
         }
     }
-
-    @Override
-    public int[][][] getData(UnitDatabase database) {
-        return greedySearch(database).grid;
-    }
-
     @Override
     public int[][][] getData(UnitDatabase database, Updatable updatable) {
         return greedySearch(database).grid;

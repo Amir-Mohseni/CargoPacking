@@ -46,12 +46,6 @@ public class RandomSearch implements Renderable {
         Random rand = new Random();
         return rand.nextInt(upperbound);
     }
-
-    @Override
-    public int[][][] getData(UnitDatabase database){
-        return randomSearch(database).grid;
-    }
-
     @Override
     public int[][][] getData(UnitDatabase database, Updatable updatable) {
         return randomSearch(database).grid;

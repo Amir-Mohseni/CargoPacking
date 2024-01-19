@@ -30,7 +30,7 @@ public class Gene {
                 child.chromosome[i] = other.chromosome[i];
             }
             //Mutation
-            if (Math.random() < 0.05) {
+            if (Math.random() < 0.001) {
                 child.chromosome[i] = randomInt(database.getBlockArrayList().size());
             }
         }

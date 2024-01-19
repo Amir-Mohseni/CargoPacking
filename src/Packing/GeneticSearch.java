@@ -94,11 +94,6 @@ public class GeneticSearch implements Renderable {
     }
 
     @Override
-    public int[][][] getData(UnitDatabase database) {
-        return geneticSearch(database).grid;
-    }
-
-    @Override
     public int[][][] getData(UnitDatabase database, Updatable updatable) {
         return geneticSearch(database).grid;
     }
