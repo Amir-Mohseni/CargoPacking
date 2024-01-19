@@ -372,7 +372,7 @@ public class JFX3D extends Application implements Updatable {
     }
 
     private void render(Renderable renderable, UnitDatabase database){
-        this.update(renderable.getData(database));
+        this.update(renderable.getData(database, this));
     }
 
     @Override
