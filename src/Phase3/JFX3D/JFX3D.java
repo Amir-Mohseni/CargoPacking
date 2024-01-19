@@ -43,10 +43,8 @@ public class JFX3D extends Application implements Updatable {
     private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
     private Constants.Settings.ParcelSettings.Parcel selectedFilling;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
-    private int value1, value2, value3;
+    private int parcelValue1, parcelValue2, parcelValue3;
     private int quantity1, quantity2, quantity3;
-
-    private String[] checkBoxOptions = {"Total cover", "Maximize score"};
 
     @Override
     public void start(Stage primaryStage) {
@@ -265,14 +263,16 @@ public class JFX3D extends Application implements Updatable {
                 throw new RuntimeException(ex);
             }
 
-            System.out.println("Values: "+value1+", "+value2+", "+value3);
+            System.out.println("Values: "+ parcelValue1 +", "+ parcelValue2 +", "+ parcelValue3);
             System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
 
         });
 
         totalCoverageRadioButton.setOnAction(e->{
             if(totalCoverageRadioButton.isSelected()){
-
+                parcelValue1 = -1;
+                parcelValue2 = -1;
+                parcelValue3 = -1;
             }
         });
 
@@ -315,15 +315,18 @@ public class JFX3D extends Application implements Updatable {
         //ActionListeners for getting the text from the value text cells
         valueText1.setOnAction(e->{
             String text = valueText1.getText();
-            if(!text.isEmpty()){value1 = Integer.parseInt(text);}
+            if(!text.isEmpty()){
+                parcelValue1 = Integer.parseInt(text);}
         });
         valueText2.setOnAction(e->{
             String text = valueText2.getText();
-            if(!text.isEmpty()){value2 = Integer.parseInt(text);}
+            if(!text.isEmpty()){
+                parcelValue2 = Integer.parseInt(text);}
         });
         valueText3.setOnAction(e->{
             String text = valueText3.getText();
-            if(!text.isEmpty()){value3 = Integer.parseInt(text);}
+            if(!text.isEmpty()){
+                parcelValue3 = Integer.parseInt(text);}
         });
 
         //ActionListeners for getting the text from the quantity text cells
