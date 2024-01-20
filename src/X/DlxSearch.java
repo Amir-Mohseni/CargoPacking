@@ -17,14 +17,19 @@ public class DlxSearch implements Renderable{
     Grid grid = new Grid(33,8,5);
     public Grid dlxSearch(UnitDatabase database) {
         Object solver;
-        if(database.getBlockArrayList().size() > 10)
-            solver = new CargoX(33,8,5,PentominoDatabase.database);
+        LinkedList<N.RNode> solution_stack;
+        if(database.getBlockArrayList().size() > 10) {
+            solver = new CargoX(33, 8, 5, PentominoDatabase.database);
+            solution_stack = ((CargoX) solver).solvePacking();
+        }
         else {
-            solver = new CargoX(33, 8, 5, ParcelDatabase.database);
+            solver = new CargoXBest(33, 8, 5, ParcelDatabase.database);
+            ((CargoXBest) solver).setTimeLimit(30);
+            solution_stack = ((CargoXBest) solver).solvePacking();
         }
 
 
-        LinkedList<N.RNode> solution_stack = ((CargoX) solver).solvePacking();
+
         int range = solution_stack.size();
         Iterator<N.RNode> it = solution_stack.iterator();
         int space = 0;
