@@ -43,7 +43,7 @@ public class JFX3D extends Application implements Updatable {
     private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
     private Constants.Settings.ParcelSettings.Parcel selectedFilling;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
-    private int value1, value2, value3;
+    private int[] parcelValues = new int[]{-1, -1, -1};
     private int quantity1, quantity2, quantity3;
 
     @Override
@@ -147,9 +147,9 @@ public class JFX3D extends Application implements Updatable {
 
         Label valuesLabel = new Label("Values");
         valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        TextField valueText1 = new TextField();
-        TextField valueText2 = new TextField();
-        TextField valueText3 = new TextField();
+        TextField parcelValueText1 = new TextField();
+        TextField parcelValueText2 = new TextField();
+        TextField parcelValueText3 = new TextField();
 
         Label quantityLabel = new Label("Quantity");
         quantityLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
@@ -157,10 +157,10 @@ public class JFX3D extends Application implements Updatable {
         TextField quantityText2 = new TextField();
         TextField quantityText3 = new TextField();
 
-        setWidthOfTextField(50,valueText1);
-        setWidthOfTextField(50,valueText2);
-        setWidthOfTextField(50,valueText2);
-        setWidthOfTextField(50,valueText3);
+        setWidthOfTextField(50,parcelValueText1);
+        setWidthOfTextField(50,parcelValueText2);
+        setWidthOfTextField(50,parcelValueText2);
+        setWidthOfTextField(50,parcelValueText3);
         setWidthOfTextField(50,quantityText1);
         setWidthOfTextField(50,quantityText2);
         setWidthOfTextField(50,quantityText3);
@@ -194,7 +194,7 @@ public class JFX3D extends Application implements Updatable {
         parcelMenuGroup.setSpacing(10);
 
         HBox valuesTextFieldGroup = new HBox();
-        valuesTextFieldGroup.getChildren().addAll(valueText1,valueText2,valueText3);
+        valuesTextFieldGroup.getChildren().addAll(parcelValueText1,parcelValueText2,parcelValueText3);
         valuesTextFieldGroup.setAlignment(Pos.CENTER);
         valuesTextFieldGroup.setSpacing(10);
 
@@ -228,9 +228,23 @@ public class JFX3D extends Application implements Updatable {
         scrollerZGroup.setAlignment(Pos.CENTER);
         scrollerZGroup.setSpacing(10);
 
+
+        Label checkBoxLabel = new Label("Select options:");
+        HBox checkBoxGroup = new HBox();
+
+        RadioButton totalCoverageRadioButton = new RadioButton("Total coverage");
+        RadioButton maximizeScoreRadioButton = new RadioButton("Maximize score");
+        ToggleGroup coverageToggleGroup = new ToggleGroup();
+        totalCoverageRadioButton.setToggleGroup(coverageToggleGroup);
+        maximizeScoreRadioButton.setToggleGroup(coverageToggleGroup);
+
+        checkBoxGroup.getChildren().addAll(totalCoverageRadioButton,maximizeScoreRadioButton);
+        checkBoxGroup.setSpacing(10);
+        checkBoxGroup.setAlignment(Pos.CENTER);
+
         VBox mainGroup = new VBox();
         mainGroup.getChildren().addAll(label1,algorithmMenuGroup,parcelMenuGroup,valuesLabel,valuesTextFieldGroup,quantityLabel,quantityTextFieldGroup,
-        buttonsGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
+        buttonsGroup,checkBoxLabel,checkBoxGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
         mainGroup.setAlignment(Pos.CENTER);
         mainGroup.setPadding(new Insets(10));
         mainGroup.setSpacing(15);
@@ -238,7 +252,12 @@ public class JFX3D extends Application implements Updatable {
         //ActionListener for StartButton
         startButton.setOnAction(e ->{
             try {
-                this.render((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance(), (UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance());
+                try{
+                    this.parcelValues[0] = Integer.parseInt(parcelValueText1.getText());
+                    this.parcelValues[1] = Integer.parseInt(parcelValueText2.getText());
+                    this.parcelValues[2] = Integer.parseInt(parcelValueText3.getText());
+                } catch (NumberFormatException ex){}
+                this.update(((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), parcelValues, this)).data);
             } catch (InstantiationException ex) {
                 throw new RuntimeException(ex);
             } catch (IllegalAccessException ex) {
@@ -249,9 +268,23 @@ public class JFX3D extends Application implements Updatable {
                 throw new RuntimeException(ex);
             }
 
-            System.out.println("Values: "+value1+", "+value2+", "+value3);
+            System.out.println("Values: "+ parcelValues[0] +", "+ parcelValues[1] +", "+ parcelValues[2]);
             System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
 
+        });
+
+        totalCoverageRadioButton.setOnAction(e->{
+            if(totalCoverageRadioButton.isSelected()){
+                parcelValues[0] = -1;
+                parcelValues[1] = -1;
+                parcelValues[2] = -1;
+            }
+        });
+
+        maximizeScoreRadioButton.setOnAction(e->{
+            if(maximizeScoreRadioButton.isSelected()){
+
+            }
         });
 
         //ActionListeners for updating the testAre with the selected algorithm
@@ -285,17 +318,20 @@ public class JFX3D extends Application implements Updatable {
         //TODO: Set ActionListener for the currentScoreLabel
 
         //ActionListeners for getting the text from the value text cells
-        valueText1.setOnAction(e->{
-            String text = valueText1.getText();
-            if(!text.isEmpty()){value1 = Integer.parseInt(text);}
+        parcelValueText1.setOnAction(e->{
+            String text = parcelValueText1.getText();
+            if(!text.isEmpty()){
+                parcelValues[0] = Integer.parseInt(text);}
         });
-        valueText2.setOnAction(e->{
-            String text = valueText2.getText();
-            if(!text.isEmpty()){value2 = Integer.parseInt(text);}
+        parcelValueText2.setOnAction(e->{
+            String text = parcelValueText2.getText();
+            if(!text.isEmpty()){
+                parcelValues[1] = Integer.parseInt(text);}
         });
-        valueText3.setOnAction(e->{
-            String text = valueText3.getText();
-            if(!text.isEmpty()){value3 = Integer.parseInt(text);}
+        parcelValueText3.setOnAction(e->{
+            String text = parcelValueText3.getText();
+            if(!text.isEmpty()){
+                parcelValues[2] = Integer.parseInt(text);}
         });
 
         //ActionListeners for getting the text from the quantity text cells
@@ -341,10 +377,6 @@ public class JFX3D extends Application implements Updatable {
     public void setParametersScrollBar(ScrollBar scrollBar, double min, double max){
         scrollBar.setMin(min);
         scrollBar.setMax(max);
-    }
-
-    private void render(Renderable renderable, UnitDatabase database){
-        this.update(renderable.getData(database, this));
     }
 
     @Override

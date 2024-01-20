@@ -1,6 +1,7 @@
 package Packing;
+import Phase3.JFX3D.AlgoRequest;
+import Phase3.JFX3D.AlgoResponse;
 import Phase3.JFX3D.Renderable;
-import Phase3.JFX3D.Updatable;
 
 import java.util.Random;
 
@@ -46,14 +47,9 @@ public class RandomSearch implements Renderable {
         Random rand = new Random();
         return rand.nextInt(upperbound);
     }
-    @Override
-    public int[][][] getData(UnitDatabase database, Updatable updatable) {
-        return randomSearch(database).grid;
-    }
 
     @Override
-    public int getScore() {
-        return grid.score;
+    public AlgoResponse getData(AlgoRequest algoRequest) {
+        return new AlgoResponse(randomSearch(algoRequest.database).grid, 0);
     }
-
 }
