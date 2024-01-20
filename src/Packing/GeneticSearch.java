@@ -3,6 +3,7 @@ package Packing;
 import Phase3.JFX3D.AlgoRequest;
 import Phase3.JFX3D.AlgoResponse;
 import Phase3.JFX3D.Renderable;
+import Phase3.JFX3D.Updatable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -13,7 +14,7 @@ public class GeneticSearch implements Renderable {
     int maxNumberOfEachBlock;
     Gene[] population;
 
-    Grid geneticSearch(UnitDatabase database) {
+    Grid geneticSearch(UnitDatabase database, Updatable updatable) {
         this.maxNumberOfEachBlock = 80;
         population = new Gene[populationSize];
 
@@ -46,6 +47,7 @@ public class GeneticSearch implements Renderable {
             sortPopulation();
 
             System.out.println(getBestGene().fitness());
+//            updatable.update(getBestGene().grid.grid);
         }
         return getBestGene().grid;
     }
@@ -61,7 +63,7 @@ public class GeneticSearch implements Renderable {
 
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
-        Grid result = geneticSearch(algoRequest.database);
+        Grid result = geneticSearch(algoRequest.database, algoRequest.updatable);
         return new AlgoResponse(result.grid, result.score);
     }
 }

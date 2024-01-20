@@ -11,11 +11,10 @@ public class GreedySearch implements Renderable{
 
     public Grid greedySearch(UnitDatabase database) {
         grid = new Grid(33, 5, 8);
-        int numberOfIterations = 1000000;
 
         System.out.println("Number of empty cells: " + grid.numberOfEmptySpaces);
 
-        for (int i = 0; i < numberOfIterations; i++) {
+        while (true){
 
             boolean foundPlacement = false;
 
@@ -34,11 +33,10 @@ public class GreedySearch implements Renderable{
                 }
             }
 
-            System.out.println("Number of empty spaces is: " + grid.emptyCells.size());
-
             if (!foundPlacement)
                 break;
         }
+        System.out.println("Score: " + grid.score);
         return grid;
     }
     private int findPlacement(int x, int y, int z, UnitDatabase database) {
