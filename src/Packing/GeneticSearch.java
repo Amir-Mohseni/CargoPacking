@@ -1,7 +1,8 @@
 package Packing;
 
+import Phase3.JFX3D.AlgoRequest;
+import Phase3.JFX3D.AlgoResponse;
 import Phase3.JFX3D.Renderable;
-import Phase3.JFX3D.Updatable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -59,17 +60,7 @@ public class GeneticSearch implements Renderable {
     }
 
     @Override
-    public int[][][] getData(UnitDatabase database) {
-        return geneticSearch(database).grid;
-    }
-
-    @Override
-    public int[][][] getData(UnitDatabase database, Updatable updatable) {
-        return geneticSearch(database).grid;
-    }
-
-    @Override
-    public int getScore() {
-        return getBestGene().fitness();
+    public AlgoResponse getData(AlgoRequest algoRequest) {
+        return new AlgoResponse(geneticSearch(algoRequest.database).grid, 0);
     }
 }

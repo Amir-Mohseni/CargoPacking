@@ -1,8 +1,8 @@
 package Packing;
+import Phase3.JFX3D.AlgoRequest;
+import Phase3.JFX3D.AlgoResponse;
 import Phase3.JFX3D.Renderable;
-import Phase3.JFX3D.Updatable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -60,20 +60,9 @@ public class GreedySearch implements Renderable{
             blocks.set(i, a);
         }
     }
-
     @Override
-    public int[][][] getData(UnitDatabase database) {
-        return greedySearch(database).grid;
-    }
-
-    @Override
-    public int[][][] getData(UnitDatabase database, Updatable updatable) {
-        return greedySearch(database).grid;
-    }
-
-    @Override
-    public int getScore() {
-        return 0;
+    public AlgoResponse getData(AlgoRequest algoRequest) {
+        return new AlgoResponse(greedySearch(algoRequest.database).grid, 0);
     }
 }
 
