@@ -361,8 +361,13 @@ public class JFX3D extends Application implements Updatable {
 
 
         stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added. TODO
-        resetButton.setOnAction(e -> this.setupRender());
+        resetButton.setOnAction(e -> this.reset());
         this.menuPane.setCenter(mainGroup);
+    }
+
+    private void reset(){
+        this.parcelValues = new int[]{-1, -1, -1};
+        this.setupRender();
     }
 
     public void setWidthOfTextField(int width, TextField textField){
