@@ -1,10 +1,5 @@
 package Packing;
 
-import Phase3.JFX3D.Renderable;
-import java.util.ArrayList;
-
-
-
 
 public class Gene {
     int[] chromosome;
@@ -26,13 +21,17 @@ public class Gene {
     }
 
     Gene crossover(Gene other) {
-        int crossoverPoint = randomInt(chromosome.length);
+        int crossoverPoint = chromosome.length / 2;
         Gene child = new Gene(chromosome.length, database);
         for (int i = 0; i < chromosome.length; i++) {
             if (i < crossoverPoint) {
                 child.chromosome[i] = chromosome[i];
             } else {
                 child.chromosome[i] = other.chromosome[i];
+            }
+            //Mutation
+            if (Math.random() < 0.001) {
+                child.chromosome[i] = randomInt(database.getBlockArrayList().size());
             }
         }
         return child;
@@ -43,8 +42,6 @@ public class Gene {
             return score;
         for (int blockIndex : chromosome) {
             while(!grid.emptyCells.isEmpty()) {
-                ArrayList<int[]> options = new ArrayList<>();
-
                 Cell emptyCell = grid.emptyCells.getFirst();
                 grid.emptyCells.remove(emptyCell);
                 //Empty Cell axis

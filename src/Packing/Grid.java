@@ -8,12 +8,12 @@ public class Grid {
     int nZ;
     public int[][][] grid;
 
-    int score;
+    public int score;
     int numberOfEmptySpaces;
 
     TreeSet <Cell> emptyCells = new TreeSet<>();
 
-    Grid(int nX, int nY, int nZ) {
+    public Grid(int nX, int nY, int nZ) {
         this.nX = nX;
         this.nY = nY;
         this.nZ = nZ;
