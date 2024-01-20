@@ -8,7 +8,7 @@ public class Grid {
     int nZ;
     public int[][][] grid;
 
-    int score;
+    public int score;
     int numberOfEmptySpaces;
 
     TreeSet <Cell> emptyCells = new TreeSet<>();

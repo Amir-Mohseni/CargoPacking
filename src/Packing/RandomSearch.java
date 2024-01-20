@@ -50,6 +50,7 @@ public class RandomSearch implements Renderable {
 
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
-        return new AlgoResponse(randomSearch(algoRequest.database).grid, 0);
+        Grid result = randomSearch(algoRequest.database);
+        return new AlgoResponse(result.grid, result.score);
     }
 }

@@ -6,6 +6,8 @@ import java.util.LinkedList;
 
 import Packing.Unit;
 import Packing.UnitDatabase;
+import Phase3.JFX3D.AlgoRequest;
+import Phase3.JFX3D.AlgoResponse;
 import Phase3.JFX3D.Renderable;
 import Phase3.JFX3D.Updatable;
 
@@ -56,12 +58,8 @@ public class DlxSearch implements Renderable{
     }
 
     @Override
-    public int[][][] getData(UnitDatabase database, Updatable updatable) {
-        return dlxSearch(database).grid;
-    }
-
-    @Override
-    public int getScore() {
-        return price;
+    public AlgoResponse getData(AlgoRequest algoRequest) {
+        Grid result = dlxSearch(algoRequest.database);
+        return new AlgoResponse(result.grid, result.score);
     }
 }

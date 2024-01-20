@@ -62,7 +62,8 @@ public class GreedySearch implements Renderable{
     }
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
-        return new AlgoResponse(greedySearch(algoRequest.database).grid, 0);
+        Grid result = greedySearch(algoRequest.database);
+        return new AlgoResponse(result.grid, result.score);
     }
 }
 
