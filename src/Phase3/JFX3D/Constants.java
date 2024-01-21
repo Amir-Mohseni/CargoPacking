@@ -25,6 +25,11 @@ public class Constants {
         public static class AlgorithmSettings{
             public static final String ALGORITHM_MENU_TEXT = "Algorithms";
 
+            public enum CoverageMode {
+                TOTAL,
+                MAXIMUM_SCORE;
+            }
+
             public enum Algorithm {
                 RANDOM(RandomSearch.class,"Random"),
                 GREEDY(GreedySearch.class, "Greedy"),
