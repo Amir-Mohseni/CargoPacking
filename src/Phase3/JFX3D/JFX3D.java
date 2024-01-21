@@ -21,6 +21,8 @@ import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Random;
 
@@ -40,11 +42,23 @@ public class JFX3D extends Application implements Updatable {
     private Stage menuStage = new Stage();
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
-    private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
-    private Constants.Settings.ParcelSettings.Parcel selectedFilling;
+    private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
+    private Constants.Settings.ParcelSettings.Parcel selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
+    private Constants.Settings.AlgorithmSettings.CoverageMode coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
-    private int[] parcelValues = new int[]{-1, -1, -1};
     private int quantity1, quantity2, quantity3;
+
+    private SharedUIElements sharedUIElements = new SharedUIElements();
+
+
+    private class SharedUIElements{
+        private int[] parcelValues = new int[]{1, 1, 1};
+        Label currentScoreLabel;
+
+        TextField parcelValueText1 = new TextField("1");
+        TextField parcelValueText2 = new TextField("1");
+        TextField parcelValueText3 = new TextField("1");
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -141,15 +155,12 @@ public class JFX3D extends Application implements Updatable {
         setWidthOfMenuBar(100,menuBar2);
 
 
-        Label selectedAlgorithmLabel = new Label();
-        Label selectedParcelLabel = new Label();
+        Label selectedAlgorithmLabel = new Label("Random");
+        Label selectedParcelLabel = new Label("Boxes");
 
 
         Label valuesLabel = new Label("Values");
         valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        TextField parcelValueText1 = new TextField();
-        TextField parcelValueText2 = new TextField();
-        TextField parcelValueText3 = new TextField();
 
         Label quantityLabel = new Label("Quantity");
         quantityLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
@@ -157,18 +168,18 @@ public class JFX3D extends Application implements Updatable {
         TextField quantityText2 = new TextField();
         TextField quantityText3 = new TextField();
 
-        setWidthOfTextField(50,parcelValueText1);
-        setWidthOfTextField(50,parcelValueText2);
-        setWidthOfTextField(50,parcelValueText2);
-        setWidthOfTextField(50,parcelValueText3);
-        setWidthOfTextField(50,quantityText1);
-        setWidthOfTextField(50,quantityText2);
-        setWidthOfTextField(50,quantityText3);
+        setWidthOfTextField(50, this.sharedUIElements.parcelValueText1);
+        setWidthOfTextField(50, this.sharedUIElements.parcelValueText2);
+        setWidthOfTextField(50, this.sharedUIElements.parcelValueText2);
+        setWidthOfTextField(50, this.sharedUIElements.parcelValueText3);
+        setWidthOfTextField(50, quantityText1);
+        setWidthOfTextField(50, quantityText2);
+        setWidthOfTextField(50, quantityText3);
 
 
         Label scoreLabel = new Label("Score:");
         scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label currentScoreLabel = new Label();
+        this.sharedUIElements.currentScoreLabel = new Label("0");
 
         ScrollBar scrollBarX = new ScrollBar();
         ScrollBar scrollBarY = new ScrollBar();
@@ -194,7 +205,7 @@ public class JFX3D extends Application implements Updatable {
         parcelMenuGroup.setSpacing(10);
 
         HBox valuesTextFieldGroup = new HBox();
-        valuesTextFieldGroup.getChildren().addAll(parcelValueText1,parcelValueText2,parcelValueText3);
+        valuesTextFieldGroup.getChildren().addAll(this.sharedUIElements.parcelValueText1, this.sharedUIElements.parcelValueText2, this.sharedUIElements.parcelValueText3);
         valuesTextFieldGroup.setAlignment(Pos.CENTER);
         valuesTextFieldGroup.setSpacing(10);
 
@@ -204,7 +215,7 @@ public class JFX3D extends Application implements Updatable {
         quantityTextFieldGroup.setSpacing(10);
 
         HBox scoreGroup = new HBox();
-        scoreGroup.getChildren().addAll(scoreLabel,currentScoreLabel);
+        scoreGroup.getChildren().addAll(scoreLabel, this.sharedUIElements.currentScoreLabel);
         scoreGroup.setAlignment(Pos.CENTER);
         scoreGroup.setSpacing(10);
 
@@ -232,13 +243,14 @@ public class JFX3D extends Application implements Updatable {
         Label checkBoxLabel = new Label("Select options:");
         HBox checkBoxGroup = new HBox();
 
-        RadioButton totalCoverageRadioButton = new RadioButton("Total coverage");
+        RadioButton maxCoverageRadioButton = new RadioButton("Maximum coverage");
         RadioButton maximizeScoreRadioButton = new RadioButton("Maximize score");
+        maxCoverageRadioButton.setSelected(true);
         ToggleGroup coverageToggleGroup = new ToggleGroup();
-        totalCoverageRadioButton.setToggleGroup(coverageToggleGroup);
+        maxCoverageRadioButton.setToggleGroup(coverageToggleGroup);
         maximizeScoreRadioButton.setToggleGroup(coverageToggleGroup);
 
-        checkBoxGroup.getChildren().addAll(totalCoverageRadioButton,maximizeScoreRadioButton);
+        checkBoxGroup.getChildren().addAll(maxCoverageRadioButton,maximizeScoreRadioButton);
         checkBoxGroup.setSpacing(10);
         checkBoxGroup.setAlignment(Pos.CENTER);
 
@@ -253,11 +265,18 @@ public class JFX3D extends Application implements Updatable {
         startButton.setOnAction(e ->{
             try {
                 try{
-                    this.parcelValues[0] = Integer.parseInt(parcelValueText1.getText());
-                    this.parcelValues[1] = Integer.parseInt(parcelValueText2.getText());
-                    this.parcelValues[2] = Integer.parseInt(parcelValueText3.getText());
+                    this.sharedUIElements.parcelValues[0] = Integer.parseInt(this.sharedUIElements.parcelValueText1.getText());
+                    this.sharedUIElements.parcelValues[1] = Integer.parseInt(this.sharedUIElements.parcelValueText2.getText());
+                    this.sharedUIElements.parcelValues[2] = Integer.parseInt(this.sharedUIElements.parcelValueText3.getText());
                 } catch (NumberFormatException ex){}
-                this.update(((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), parcelValues, this)).data);
+
+                if (this.coverageMode.equals(Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_SCORE)){
+                    this.update(((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), this.sharedUIElements.parcelValues, this)).data);
+                } else {
+
+                    this.update(((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), new int[]{-1, -1, -1}, this)).data);
+                }
+
             } catch (InstantiationException ex) {
                 throw new RuntimeException(ex);
             } catch (IllegalAccessException ex) {
@@ -268,26 +287,25 @@ public class JFX3D extends Application implements Updatable {
                 throw new RuntimeException(ex);
             }
 
-            System.out.println("Values: "+ parcelValues[0] +", "+ parcelValues[1] +", "+ parcelValues[2]);
+            System.out.println("Values: "+ this.sharedUIElements.parcelValues[0] +", "+ this.sharedUIElements.parcelValues[1] +", "+ this.sharedUIElements.parcelValues[2]);
             System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
+            System.out.println("Coverage: " + this.coverageMode.toString());
 
         });
 
-        totalCoverageRadioButton.setOnAction(e->{
-            if(totalCoverageRadioButton.isSelected()){
-                parcelValues[0] = -1;
-                parcelValues[1] = -1;
-                parcelValues[2] = -1;
+        maxCoverageRadioButton.setOnAction(e->{
+            if(maxCoverageRadioButton.isSelected()){
+                this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
             }
         });
 
         maximizeScoreRadioButton.setOnAction(e->{
             if(maximizeScoreRadioButton.isSelected()){
-
+                this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_SCORE;
             }
         });
 
-        //ActionListeners for updating the testAre with the selected algorithm
+        //ActionListeners for updating the testAre with the selected algorithmA
         random.setOnAction(e->{
             selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
             selectedAlgorithmLabel.setText(selectedAlgo.getName());
@@ -317,22 +335,6 @@ public class JFX3D extends Application implements Updatable {
 
         //TODO: Set ActionListener for the currentScoreLabel
 
-        //ActionListeners for getting the text from the value text cells
-        parcelValueText1.setOnAction(e->{
-            String text = parcelValueText1.getText();
-            if(!text.isEmpty()){
-                parcelValues[0] = Integer.parseInt(text);}
-        });
-        parcelValueText2.setOnAction(e->{
-            String text = parcelValueText2.getText();
-            if(!text.isEmpty()){
-                parcelValues[1] = Integer.parseInt(text);}
-        });
-        parcelValueText3.setOnAction(e->{
-            String text = parcelValueText3.getText();
-            if(!text.isEmpty()){
-                parcelValues[2] = Integer.parseInt(text);}
-        });
 
         //ActionListeners for getting the text from the quantity text cells
         quantityText1.setOnAction(e->{
@@ -366,7 +368,7 @@ public class JFX3D extends Application implements Updatable {
     }
 
     private void reset(){
-        this.parcelValues = new int[]{-1, -1, -1};
+        this.sharedUIElements.parcelValues = new int[]{-1, -1, -1};
         this.setupRender();
     }
 
@@ -387,7 +389,42 @@ public class JFX3D extends Application implements Updatable {
     @Override
     public void update(int[][][] data) {
         this.setupRender();
+        this.sharedUIElements.currentScoreLabel.setText(String.valueOf(this.calculateScore(data, this.sharedUIElements.parcelValues)));
         this.draw3D(data);
+    }
+
+    private int calculateScore(int[][][] data, int[] values){
+        BigDecimal score = BigDecimal.valueOf(0);
+        for (int dimX = 0; dimX < data.length; dimX++) {
+            for (int dimY = 0; dimY < data[dimX].length; dimY++) {
+                for (int dimZ = 0; dimZ < data[dimX][dimY].length; dimZ++) {
+                    int id = data[dimX][dimY][dimZ];
+                    BigDecimal unit_value = BigDecimal.valueOf(0);
+                    switch (id) {
+                        case 0:
+                            continue;
+
+                        // parcel A
+                        case 1:
+                            unit_value = BigDecimal.valueOf(this.sharedUIElements.parcelValues[id-1]).divide(BigDecimal.valueOf(16), 10, RoundingMode.FLOOR);
+                            break;
+
+                        // parcel B
+                        case 2:
+                            unit_value = BigDecimal.valueOf(this.sharedUIElements.parcelValues[id-1]).divide(BigDecimal.valueOf(24), 10, RoundingMode.FLOOR);
+                            break;
+
+                        // parcel C
+                        case 3:
+                            unit_value = BigDecimal.valueOf(this.sharedUIElements.parcelValues[id-1]).divide(BigDecimal.valueOf(27), 10, RoundingMode.FLOOR);
+                            break;
+
+                    }
+                    score = score.add(unit_value);
+                }
+            }
+        }
+        return score.setScale(0, RoundingMode.CEILING).intValue();
     }
 
     private void draw3D(int[][][] data) {
@@ -425,9 +462,6 @@ public class JFX3D extends Application implements Updatable {
                 }
             }
         }
-
-
-
     }
 
     private String getHexColor(Integer id){
