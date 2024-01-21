@@ -26,7 +26,7 @@ public class Constants {
             public static final String ALGORITHM_MENU_TEXT = "Algorithms";
 
             public enum CoverageMode {
-                TOTAL,
+                MAXIMUM_COVERAGE,
                 MAXIMUM_SCORE;
             }
 

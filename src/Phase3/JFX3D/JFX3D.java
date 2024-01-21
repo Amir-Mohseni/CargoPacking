@@ -44,7 +44,7 @@ public class JFX3D extends Application implements Updatable {
     private final int spacing = Settings.Cubes.CUBE_SPACING;
     private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
     private Constants.Settings.ParcelSettings.Parcel selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
-    private Constants.Settings.AlgorithmSettings.CoverageMode coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.TOTAL;
+    private Constants.Settings.AlgorithmSettings.CoverageMode coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
     private int quantity1, quantity2, quantity3;
 
@@ -52,12 +52,12 @@ public class JFX3D extends Application implements Updatable {
 
 
     private class SharedUIElements{
-        private int[] parcelValues = new int[3];
+        private int[] parcelValues = new int[]{1, 1, 1};
         Label currentScoreLabel;
 
-        TextField parcelValueText1 = new TextField();
-        TextField parcelValueText2 = new TextField();
-        TextField parcelValueText3 = new TextField();
+        TextField parcelValueText1 = new TextField("1");
+        TextField parcelValueText2 = new TextField("1");
+        TextField parcelValueText3 = new TextField("1");
     }
 
     @Override
@@ -243,14 +243,14 @@ public class JFX3D extends Application implements Updatable {
         Label checkBoxLabel = new Label("Select options:");
         HBox checkBoxGroup = new HBox();
 
-        RadioButton totalCoverageRadioButton = new RadioButton("Total coverage");
+        RadioButton maxCoverageRadioButton = new RadioButton("Maximum coverage");
         RadioButton maximizeScoreRadioButton = new RadioButton("Maximize score");
-        totalCoverageRadioButton.setSelected(true);
+        maxCoverageRadioButton.setSelected(true);
         ToggleGroup coverageToggleGroup = new ToggleGroup();
-        totalCoverageRadioButton.setToggleGroup(coverageToggleGroup);
+        maxCoverageRadioButton.setToggleGroup(coverageToggleGroup);
         maximizeScoreRadioButton.setToggleGroup(coverageToggleGroup);
 
-        checkBoxGroup.getChildren().addAll(totalCoverageRadioButton,maximizeScoreRadioButton);
+        checkBoxGroup.getChildren().addAll(maxCoverageRadioButton,maximizeScoreRadioButton);
         checkBoxGroup.setSpacing(10);
         checkBoxGroup.setAlignment(Pos.CENTER);
 
@@ -289,12 +289,13 @@ public class JFX3D extends Application implements Updatable {
 
             System.out.println("Values: "+ this.sharedUIElements.parcelValues[0] +", "+ this.sharedUIElements.parcelValues[1] +", "+ this.sharedUIElements.parcelValues[2]);
             System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
+            System.out.println("Coverage: " + this.coverageMode.toString());
 
         });
 
-        totalCoverageRadioButton.setOnAction(e->{
-            if(totalCoverageRadioButton.isSelected()){
-                this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.TOTAL;
+        maxCoverageRadioButton.setOnAction(e->{
+            if(maxCoverageRadioButton.isSelected()){
+                this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
             }
         });
 
@@ -304,7 +305,7 @@ public class JFX3D extends Application implements Updatable {
             }
         });
 
-        //ActionListeners for updating the testAre with the selected algorithm
+        //ActionListeners for updating the testAre with the selected algorithmA
         random.setOnAction(e->{
             selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
             selectedAlgorithmLabel.setText(selectedAlgo.getName());
@@ -461,9 +462,6 @@ public class JFX3D extends Application implements Updatable {
                 }
             }
         }
-
-
-
     }
 
     private String getHexColor(Integer id){
