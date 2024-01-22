@@ -9,7 +9,9 @@ public class Settings {
         public static final Color BACKGROUND_COLOR = Color.WHITE;
         public static final Color LIGHT_COLOR = Color.WHITE;
 
-        public static final int CONTENT_WINDOW_WIDTH = 720;
+        public static final int MAIN_WINDOW_WIDTH = 1280;
+        public static final int MAIN_WINDOW_HEIGHT = 720;
+        public static final int CONTENT_WINDOW_WIDTH = MAIN_WINDOW_WIDTH - 350;
         public static final int CONTENT_WINDOW_HEIGHT = 720;
 
         public static final int MENU_WINDOW_WIDTH = 480;

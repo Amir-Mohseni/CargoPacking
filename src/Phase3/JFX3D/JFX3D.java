@@ -21,6 +21,7 @@ import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
@@ -32,19 +33,23 @@ public class JFX3D extends Application implements Updatable {
     private double anchorAngleX = 0, anchorAngleY = 0;
 
 
-    private BorderPane borderPane = new BorderPane();
-    private final BorderPane menuPane = new BorderPane();
+    private BorderPane renderPane = new BorderPane();
+//    private final BorderPane menuPane = new BorderPane();
 
     private RotatorGroup rotatorGroup = new RotatorGroup();
     private Stage renderStage;
-    private Stage menuStage = new Stage();
+//    private Stage menuStage = new Stage();
     private final int cubeLength = Settings.Cubes.CUBE_LENGTH;
     private final int spacing = Settings.Cubes.CUBE_SPACING;
-    private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo;
-    private Constants.Settings.ParcelSettings.Parcel selectedFilling;
+    private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
+    private Constants.Settings.ParcelSettings.Parcel selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
-    private int[] parcelValues = new int[]{-1, -1, -1};
+    private int[] parcelValues = new int[]{1, 1, 1};
     private int quantity1, quantity2, quantity3;
+
+    private int[][][] currentData = new int[0][0][0];
+    private int[] positionValues = new int[3];
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -55,18 +60,18 @@ public class JFX3D extends Application implements Updatable {
     }
 
     private void setupScenes(){
-        this.borderPane = new BorderPane();
-        Scene mainScene = new Scene(this.borderPane, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT);
+        this.renderPane = new BorderPane();
+        Scene mainScene = new Scene(this.renderPane, Settings.Window.MAIN_WINDOW_WIDTH, Settings.Window.MAIN_WINDOW_HEIGHT);
         renderStage.setScene(mainScene);
         renderStage.setTitle(Constants.Windows.RENDER_WINDOW_TITLE);
         renderStage.setOnCloseRequest(t -> System.exit(0));
         renderStage.show();
 
-        Scene menuScene = new Scene(this.menuPane, Settings.Window.MENU_WINDOW_WIDTH, Settings.Window.MENU_WINDOW_HEIGHT);
-        menuStage.setScene(menuScene);
-        menuStage.setTitle(Constants.Windows.UI_WINDOW_TITLE);
-        menuStage.setOnCloseRequest(t -> System.exit(0));
-        menuStage.show();
+//        Scene menuScene = new Scene(this.menuPane, Settings.Window.MENU_WINDOW_WIDTH, Settings.Window.MENU_WINDOW_HEIGHT);
+//        menuStage.setScene(menuScene);
+//        menuStage.setTitle(Constants.Windows.UI_WINDOW_TITLE);
+//        menuStage.setOnCloseRequest(t -> System.exit(0));
+//        menuStage.show();
     }
 
     private void setupRender(){
@@ -76,7 +81,7 @@ public class JFX3D extends Application implements Updatable {
 
         SubScene scene = new SubScene(rotatorGroup, Settings.Window.CONTENT_WINDOW_WIDTH, Settings.Window.CONTENT_WINDOW_HEIGHT, true, SceneAntialiasing.BALANCED);
 
-        this.borderPane.setCenter(scene);
+        this.renderPane.setRight(scene);
 
         scene.setFill(Settings.Window.BACKGROUND_COLOR);
         scene.setCamera(perspectiveCamera);
@@ -115,7 +120,6 @@ public class JFX3D extends Application implements Updatable {
         MenuItem genetic = new MenuItem("Genetic");
         MenuItem algoX = new MenuItem("Algorithm X");
 
-
         algorithmMenu.getItems().addAll(
                 random,
                 greedy,
@@ -126,6 +130,8 @@ public class JFX3D extends Application implements Updatable {
         MenuBar menuBar1 = new MenuBar();
         menuBar1.getMenus().add(algorithmMenu);
         setWidthOfMenuBar(100,menuBar1);
+
+        random.fire();
 
         Menu typeOfFilling = new Menu("Parcels");
         MenuItem pentominoes = new MenuItem("Pentominoes");
@@ -140,16 +146,18 @@ public class JFX3D extends Application implements Updatable {
         menuBar2.getMenus().add(typeOfFilling);
         setWidthOfMenuBar(100,menuBar2);
 
+        boxes.fire();
 
-        Label selectedAlgorithmLabel = new Label();
-        Label selectedParcelLabel = new Label();
+
+        Label selectedAlgorithmLabel = new Label("Random");
+        Label selectedParcelLabel = new Label("Boxes");
 
 
         Label valuesLabel = new Label("Values");
         valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        TextField parcelValueText1 = new TextField();
-        TextField parcelValueText2 = new TextField();
-        TextField parcelValueText3 = new TextField();
+        TextField parcelValueText1 = new TextField("1");
+        TextField parcelValueText2 = new TextField("1");
+        TextField parcelValueText3 = new TextField("1");
 
         Label quantityLabel = new Label("Quantity");
         quantityLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
@@ -159,12 +167,10 @@ public class JFX3D extends Application implements Updatable {
 
         setWidthOfTextField(50,parcelValueText1);
         setWidthOfTextField(50,parcelValueText2);
-        setWidthOfTextField(50,parcelValueText2);
         setWidthOfTextField(50,parcelValueText3);
         setWidthOfTextField(50,quantityText1);
         setWidthOfTextField(50,quantityText2);
         setWidthOfTextField(50,quantityText3);
-
 
         Label scoreLabel = new Label("Score:");
         scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD,12));
@@ -174,9 +180,19 @@ public class JFX3D extends Application implements Updatable {
         ScrollBar scrollBarY = new ScrollBar();
         ScrollBar scrollBarZ = new ScrollBar();
 
-        setParametersScrollBar(scrollBarX,0,200);
-        setParametersScrollBar(scrollBarY,0,200);
-        setParametersScrollBar(scrollBarZ,0,200);
+        SIMD.doSIMD(new ScrollBar[]{scrollBarX, scrollBarY, scrollBarZ}, item -> {
+            item.setUnitIncrement(1);
+            item.setPrefWidth(300);
+        });
+
+
+//        scrollBarX.setPrefWidth(300);
+//        scrollBarY.setPrefWidth(300);
+//        scrollBarZ.setPrefWidth(300);
+
+        setParametersScrollBar(scrollBarX,0,33-1);
+        setParametersScrollBar(scrollBarY,0,5-1);
+        setParametersScrollBar(scrollBarZ,0,8-1);
 
         Label scrollerLabelX = new Label("X axis");
         Label scrollerLabelY = new Label("Y axis");
@@ -242,6 +258,8 @@ public class JFX3D extends Application implements Updatable {
         checkBoxGroup.setSpacing(10);
         checkBoxGroup.setAlignment(Pos.CENTER);
 
+        totalCoverageRadioButton.setSelected(true);
+
         VBox mainGroup = new VBox();
         mainGroup.getChildren().addAll(label1,algorithmMenuGroup,parcelMenuGroup,valuesLabel,valuesTextFieldGroup,quantityLabel,quantityTextFieldGroup,
         buttonsGroup,checkBoxLabel,checkBoxGroup,scoreGroup,scrollerXGroup,scrollerYGroup,scrollerZGroup);
@@ -252,21 +270,13 @@ public class JFX3D extends Application implements Updatable {
         //ActionListener for StartButton
         startButton.setOnAction(e ->{
             try {
-                try{
-                    this.parcelValues[0] = Integer.parseInt(parcelValueText1.getText());
-                    this.parcelValues[1] = Integer.parseInt(parcelValueText2.getText());
-                    this.parcelValues[2] = Integer.parseInt(parcelValueText3.getText());
-                } catch (NumberFormatException ex){}
-                this.update(((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), parcelValues, this)).data);
-            } catch (InstantiationException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new RuntimeException(ex);
-            } catch (NoSuchMethodException ex) {
-                throw new RuntimeException(ex);
-            }
+                this.parcelValues[0] = Integer.parseInt(parcelValueText1.getText());
+                this.parcelValues[1] = Integer.parseInt(parcelValueText2.getText());
+                this.parcelValues[2] = Integer.parseInt(parcelValueText3.getText());
+            } catch (NumberFormatException ex){}
+            this.renderStage.requestFocus();
+            this.update();
+
 
             System.out.println("Values: "+ parcelValues[0] +", "+ parcelValues[1] +", "+ parcelValues[2]);
             System.out.println("Quantities: "+quantity1+", "+quantity2+", "+quantity3);
@@ -350,19 +360,31 @@ public class JFX3D extends Application implements Updatable {
 
         //ActionListeners for getting the current positions of each scroller
         scrollBarX.valueProperty().addListener((observable,oldValue,newValue)->{
-            System.out.println("Current position of ScrollBarX: "+newValue);
+            int currentPosition = (int) Math.floor(newValue.doubleValue());
+            if (currentPosition != this.positionValues[0]){
+                this.positionValues[0] = currentPosition;
+                update(this.positionValues);
+            }
         });
         scrollBarY.valueProperty().addListener((observable,oldValue,newValue)->{
-            System.out.println("Current position of ScrollBarY: "+newValue);
+            int currentPosition = (int) Math.floor(newValue.doubleValue());
+            if (currentPosition != this.positionValues[1]){
+                this.positionValues[1] = currentPosition;
+                update(this.positionValues);
+            }
         });
         scrollBarZ.valueProperty().addListener((observable,oldValue,newValue)->{
-            System.out.println("Current position of ScrollBarZ: "+newValue);
+            int currentPosition = (int) Math.floor(newValue.doubleValue());
+            if (currentPosition != this.positionValues[2]){
+                this.positionValues[2] = currentPosition;
+                update(this.positionValues);
+            }
         });
 
 
         stopButton.setOnAction(e->{});//ActionListener is empty, functionality to be added. TODO
         resetButton.setOnAction(e -> this.setupRender());
-        this.menuPane.setCenter(mainGroup);
+        this.renderPane.setLeft(mainGroup);
     }
 
     public void setWidthOfTextField(int width, TextField textField){
@@ -379,50 +401,65 @@ public class JFX3D extends Application implements Updatable {
         scrollBar.setMax(max);
     }
 
-    @Override
-    public void update(int[][][] data) {
-        this.setupRender();
-        this.draw3D(data);
+    public void update() {
+        try{
+            this.currentData = ((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), parcelValues, this)).data;
+            this.setupRender();
+            this.draw3D(this.currentData, this.positionValues);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void draw3D(int[][][] data) {
-        int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
-        int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
+    public void update(int[] startingPositions) {
+        System.out.println("Slice: " + Arrays.toString(this.positionValues));
+        this.setupRender();
+        this.draw3D(this.currentData, startingPositions);
+    }
 
-        for (int dimX = 0; dimX < data.length; dimX++){
-            for (int dimY = 0; dimY < data[dimX].length; dimY++){
-                for (int dimZ = 0; dimZ < data[dimX][dimY].length; dimZ++){
-                    int id = data[dimX][dimY][dimZ];
-                    if (id  == 0){
-                        continue;
+    private void draw3D(int[][][] data, int[] start) {
+        try{
+            int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
+            int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
+
+            for (int dimX = start[0]; dimX < data.length; dimX++){
+                for (int dimY = start[1]; dimY < data[dimX].length; dimY++){
+                    for (int dimZ = start[2]; dimZ < data[dimX][dimY].length; dimZ++){
+                        int id = data[dimX][dimY][dimZ];
+                        if (id  == 0){
+                            continue;
+                        }
+
+                        Box newBox = new Box();
+
+                        newBox.setWidth(cubeLength);
+                        newBox.setHeight(cubeLength);
+                        newBox.setDepth(cubeLength);
+
+                        String hexColor = getHexColor(id);
+                        PhongMaterial material = new PhongMaterial();
+                        material.setDiffuseColor(Color.web(hexColor, 1));
+                        newBox.setMaterial(material);
+
+                        int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
+                        int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
+                        int transZ = ((-1 * midZ + dimZ) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midZ + dimZ));
+
+                        newBox.setTranslateX(transX);
+                        newBox.setTranslateY(transY);
+                        newBox.setTranslateZ(transZ);
+
+                        this.rotatorGroup.getChildren().add(newBox);
                     }
-
-                    Box newBox = new Box();
-
-                    newBox.setWidth(cubeLength);
-                    newBox.setHeight(cubeLength);
-                    newBox.setDepth(cubeLength);
-
-                    String hexColor = getHexColor(id);
-                    PhongMaterial material = new PhongMaterial();
-                    material.setDiffuseColor(Color.web(hexColor, 1));
-                    newBox.setMaterial(material);
-
-                    int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
-                    int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
-                    int transZ = ((-1 * midZ + dimZ) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midZ + dimZ));
-
-                    newBox.setTranslateX(transX);
-                    newBox.setTranslateY(transY);
-                    newBox.setTranslateZ(transZ);
-
-                    this.rotatorGroup.getChildren().add(newBox);
                 }
             }
-        }
-
-
-
+        } catch (ArrayIndexOutOfBoundsException e){}
     }
 
     private String getHexColor(Integer id){
