@@ -121,13 +121,17 @@ public class JFX3D extends Application implements Updatable {
         Menu algorithmMenu = new Menu("Algorithms");
         MenuItem random = new MenuItem("Random");
         MenuItem greedy = new MenuItem("Greedy");
+        MenuItem greedy2 = new MenuItem("Greedy2");
         MenuItem genetic = new MenuItem("Genetic");
+        MenuItem genetic2 = new MenuItem("Genetic2");
         MenuItem algoX = new MenuItem("Algorithm X");
 
         algorithmMenu.getItems().addAll(
                 random,
                 greedy,
+                greedy2,
                 genetic,
+                genetic2,
                 algoX
         );
 
@@ -308,8 +312,16 @@ public class JFX3D extends Application implements Updatable {
             selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GREEDY;
             selectedAlgorithmLabel.setText(selectedAlgo.getName());
         });
+        greedy2.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GREEDY2;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
         genetic.setOnAction(e->{
             selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GENETIC;
+            selectedAlgorithmLabel.setText(selectedAlgo.getName());
+        });
+        genetic2.setOnAction(e->{
+            selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.GENETIC2;
             selectedAlgorithmLabel.setText(selectedAlgo.getName());
         });
         algoX.setOnAction(e->{
