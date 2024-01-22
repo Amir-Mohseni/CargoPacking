@@ -16,24 +16,24 @@ import Phase3.JFX3D.Updatable;
 
 public class DlxSearch implements Renderable{
     int price = 0;
-    Grid grid = new Grid(33,8,5);
+    Grid grid = new Grid(33,5,8);
     public Grid dlxSearch(UnitDatabase database, double[] values) {
         Object solver;
         LinkedList<N.RNode> solution_stack;
         if(database.getBlockArrayList().size() > 10) {
             if(values[0] == -1) {
-                solver = new CargoX(33, 8, 5, PentominoDatabase.database);
+                solver = new CargoX(33, 5, 8, PentominoDatabase.database);
                 solution_stack = ((CargoX) solver).solvePacking();
             }
             else {
-                solver = new CargoXBest(33, 8, 5, PentominoDatabase.database);
+                solver = new CargoXBest(33, 5, 8, PentominoDatabase.database);
                 ((CargoXBest) solver).setTimeLimit(30);
                 solution_stack = ((CargoXBest) solver).solvePacking(new int[]{300, 300, 300}, values);
             }
             //if the values are all -1 use this code otherwise use cargoXBest
         }
         else {
-            solver = new CargoXBest(33, 8, 5, ParcelDatabase.database);
+            solver = new CargoXBest(33, 5, 8, ParcelDatabase.database);
             ((CargoXBest) solver).setTimeLimit(30);
             if(values[0] == -1)
                 solution_stack = ((CargoXBest) solver).solvePacking();

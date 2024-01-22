@@ -21,6 +21,8 @@ import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
@@ -400,6 +402,41 @@ public class JFX3D extends Application implements Updatable {
         scrollBar.setMin(min);
         scrollBar.setMax(max);
     }
+
+    private int calculateScore(int[][][] data, int[] values){
+        BigDecimal score = BigDecimal.valueOf(0);
+        for (int dimX = 0; dimX < data.length; dimX++) {
+            for (int dimY = 0; dimY < data[dimX].length; dimY++) {
+                for (int dimZ = 0; dimZ < data[dimX][dimY].length; dimZ++) {
+                    int id = data[dimX][dimY][dimZ];
+                    BigDecimal unit_value = BigDecimal.valueOf(0);
+                    switch (id) {
+                        case 0:
+                            continue;
+
+                            // parcel A
+                        case 1:
+                            unit_value = BigDecimal.valueOf(parcelValues[id-1]).divide(BigDecimal.valueOf(16), 10, RoundingMode.FLOOR);
+                            break;
+
+                        // parcel B
+                        case 2:
+                            unit_value = BigDecimal.valueOf(parcelValues[id-1]).divide(BigDecimal.valueOf(24), 10, RoundingMode.FLOOR);
+                            break;
+
+                        // parcel C
+                        case 3:
+                            unit_value = BigDecimal.valueOf(parcelValues[id-1]).divide(BigDecimal.valueOf(27), 10, RoundingMode.FLOOR);
+                            break;
+
+                    }
+                    score = score.add(unit_value);
+                }
+            }
+        }
+        return score.setScale(0, RoundingMode.CEILING).intValue();
+    }
+
 
     public void update() {
         try{
