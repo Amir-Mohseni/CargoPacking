@@ -73,6 +73,37 @@ public class DlxSearch implements Renderable {
         System.out.println(" ,Percentage of cargo filled: " + (space/(double)total_space));
         System.out.println(" ,Price per block: " + (price/(double)total_space));
 
+        int[] count = new int[3];
+
+        for (int i = 0; i < grid.grid.length; i++) {
+            for (int j = 0; j < grid.grid[i].length; j++) {
+                for (int k = 0; k < grid.grid[i][j].length; k++) {
+                    if(grid.grid[i][j][k] == 0)
+                        continue;
+                    count[grid.grid[i][j][k] - 1]++;
+                }
+            }
+        }
+
+        if(database.getBlockArrayList().size() > 10) {
+            count[0] /= 5;
+            count[1] /= 5;
+            count[2] /= 5;
+
+            if(values[0] == -1)
+                values = new double[]{5, 5, 5};
+            grid.score = (int) (count[0] * values[0] + count[1] * values[1] + count[2] * values[2]);
+        }
+        else {
+            count[0] /= 16;
+            count[1] /= 24;
+            count[2] /= 27;
+
+            if(values[0] == -1)
+                values = new double[]{16, 24, 27};
+            grid.score = (int) (count[0] * values[0] + count[1] * values[1] + count[2] * values[2]);
+        }
+
         return grid;
     }
 
