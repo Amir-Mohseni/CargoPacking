@@ -183,13 +183,31 @@ public class GA implements Renderable {
             isParcel = false;
         run();
         Grid result = new Grid(33, 5, 8);
-        if(isParcel)
+        if(isParcel) {
             result.grid = Search.generateFieldFromChromosomes(population[0].getChromosomes(), ParcelDatabase.getDatabase(), values);
-        else {
-            values = new int[]{5, 5, 5};
-            result.grid = Search.generateFieldFromChromosomes(population[0].getChromosomes(), PentominoesDatabase.getDatabase(), values);
+            result.score = (int) population[0].getFitness();
         }
-        result.score = (int) population[0].getFitness();
+        else {
+            result.grid = Search.generateFieldFromChromosomes(population[0].getChromosomes(), PentominoesDatabase.getDatabase(), values);
+            if(values[0] == -1)
+                values = new int[]{5, 5, 5};
+            int[] count = new int[3];
+            System.out.println(result.grid.length * result.grid[0].length * result.grid[0][0].length);
+            for (int i = 0; i < result.grid.length; i++) {
+                for (int j = 0; j < result.grid[i].length; j++) {
+                    for (int k = 0; k < result.grid[i][j].length; k++) {
+                        if(result.grid[i][j][k] > 0) {
+                            count[result.grid[i][j][k] - 1]++;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < count.length; i++)
+                count[i] /= 5;
+            result.score = 0;
+            for (int i = 0; i < count.length; i++)
+                result.score += count[i] * values[i];
+        }
         return new AlgoResponse(result.grid, result.score);
     }
 

@@ -75,10 +75,10 @@ public class Search {
         for (int i = 0; i < piece.length; i++) { // for every z
             for (int j = 0; j < piece[i].length; j++) { // for every y
                 for (int k = 0; k < piece[i][j].length; k++) { // for every x
-                if(piece[i][j][k]) {
+                    if(piece[i][j][k]) {
 
-                    field[coord[0] + i][coord[1] + j][coord[2] + k] = id; // add the piece to the field
-                }
+                        field[coord[0] + i][coord[1] + j][coord[2] + k] = id; // add the piece to the field
+                    }
                 }
             }
         }
