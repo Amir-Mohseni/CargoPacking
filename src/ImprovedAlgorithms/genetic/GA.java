@@ -185,8 +185,10 @@ public class GA implements Renderable {
         Grid result = new Grid(33, 5, 8);
         if(isParcel)
             result.grid = Search.generateFieldFromChromosomes(population[0].getChromosomes(), ParcelDatabase.getDatabase(), values);
-        else
+        else {
+            values = new int[]{5, 5, 5};
             result.grid = Search.generateFieldFromChromosomes(population[0].getChromosomes(), PentominoesDatabase.getDatabase(), values);
+        }
         result.score = (int) population[0].getFitness();
         return new AlgoResponse(result.grid, result.score);
     }
