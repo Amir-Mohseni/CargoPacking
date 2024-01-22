@@ -1,5 +1,7 @@
 package Phase3.JFX3D;
 
+import ImprovedAlgorithms.genetic.GA;
+import ImprovedAlgorithms.greedy.GrSearch;
 import Packing.*;
 import javafx.scene.text.FontWeight;
 
@@ -33,7 +35,9 @@ public class Constants {
             public enum Algorithm {
                 RANDOM(RandomSearch.class,"Random"),
                 GREEDY(GreedySearch.class, "Greedy"),
+                GREEDY2(GrSearch.class, "Greedy2"),
                 ALGORITHM_X(X.DlxSearch.class,"Algorithm X"),
+                GENETIC2(GA.class, "Genetic2"),
                 GENETIC(GeneticSearch.class, "Genetic");
 
                 private final String name;

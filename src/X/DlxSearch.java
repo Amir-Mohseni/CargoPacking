@@ -12,7 +12,7 @@ import Phase3.JFX3D.Renderable;
 import Phase3.JFX3D.Updatable;
 
 
-public class DlxSearch implements Renderable{
+public class DlxSearch implements Renderable {
     int price = 0;
     Grid grid = new Grid(33,8,5);
     public Grid dlxSearch(UnitDatabase database, double[] values) {
