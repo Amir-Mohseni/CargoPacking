@@ -47,11 +47,11 @@ public class JFX3D extends Application implements Updatable {
     private Constants.Settings.ParcelSettings.Parcel selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
     private Constants.Settings.AlgorithmSettings.CoverageMode coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
-    private int[] parcelValues = new int[]{1, 1, 1};
+    private int[] parcelValues = new int[]{-1, -1, -1};
     private int quantity1, quantity2, quantity3;
 
     private int[][][] currentData = new int[0][0][0];
-    private int[] positionValues = new int[]{-1, -1, -1};
+    private int[] positionValues = new int[3];
     private Label currentScoreLabel;
 
 
@@ -497,43 +497,39 @@ public class JFX3D extends Application implements Updatable {
     }
 
     private void draw3D(int[][][] data, int[] start) {
-        try{
-            int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
-            int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
+        int lenX = data.length, lenY = data[0].length, lenZ = data[0][0].length;
+        int midX = Math.ceilDiv(lenX, 2), midY = Math.ceilDiv(lenY, 2), midZ = Math.ceilDiv(lenZ, 2);
 
-            for (int dimX = start[0]; dimX < data.length; dimX++){
-                for (int dimY = start[1]; dimY < data[dimX].length; dimY++){
-                    for (int dimZ = start[2]; dimZ < data[dimX][dimY].length; dimZ++){
-                        int id = data[dimX][dimY][dimZ];
-                        if (id  == 0){
-                            continue;
-                        }
-
-                        Box newBox = new Box();
-
-                        newBox.setWidth(cubeLength);
-                        newBox.setHeight(cubeLength);
-                        newBox.setDepth(cubeLength);
-
-                        String hexColor = getHexColor(id);
-                        PhongMaterial material = new PhongMaterial();
-                        material.setDiffuseColor(Color.web(hexColor, 1));
-                        newBox.setMaterial(material);
-
-                        int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
-                        int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
-                        int transZ = ((-1 * midZ + dimZ) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midZ + dimZ));
-
-                        newBox.setTranslateX(transX);
-                        newBox.setTranslateY(transY);
-                        newBox.setTranslateZ(transZ);
-
-                        this.rotatorGroup.getChildren().add(newBox);
+        for (int dimX = start[0]; dimX < data.length; dimX++){
+            for (int dimY = start[1]; dimY < data[dimX].length; dimY++){
+                for (int dimZ = start[2]; dimZ < data[dimX][dimY].length; dimZ++){
+                    int id = data[dimX][dimY][dimZ];
+                    if (id  == 0){
+                        continue;
                     }
+
+                    Box newBox = new Box();
+
+                    newBox.setWidth(cubeLength);
+                    newBox.setHeight(cubeLength);
+                    newBox.setDepth(cubeLength);
+
+                    String hexColor = getHexColor(id);
+                    PhongMaterial material = new PhongMaterial();
+                    material.setDiffuseColor(Color.web(hexColor, 1));
+                    newBox.setMaterial(material);
+
+                    int transX = ((-1 * midX + dimX) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midX + dimX));
+                    int transY = ((-1 * midY + dimY) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midY + dimY));
+                    int transZ = ((-1 * midZ + dimZ) * this.cubeLength + this.spacing * this.cubeLength * (-1 * midZ + dimZ));
+
+                    newBox.setTranslateX(transX);
+                    newBox.setTranslateY(transY);
+                    newBox.setTranslateZ(transZ);
+
+                    this.rotatorGroup.getChildren().add(newBox);
                 }
             }
-        } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println(e.toString());
         }
     }
 
