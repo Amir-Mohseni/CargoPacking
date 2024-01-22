@@ -453,7 +453,9 @@ public class JFX3D extends Application implements Updatable {
             }
 
             this.currentData = algoResponse.data;
-            currentScoreLabel.setText(String.valueOf(algoResponse.score));
+            int currentScore = this.calculateScore(this.currentData, this.parcelValues);
+            System.out.println("Current score: " + currentScore);
+            currentScoreLabel.setText(String.valueOf(currentScore));
             this.setupRender();
             this.draw3D(this.currentData, this.positionValues);
         } catch (InvocationTargetException e) {

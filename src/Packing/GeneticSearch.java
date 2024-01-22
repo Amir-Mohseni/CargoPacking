@@ -63,6 +63,7 @@ public class GeneticSearch implements Renderable {
 
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
+        System.out.println(Arrays.toString(algoRequest.values));
         Grid result = geneticSearch(algoRequest.database, algoRequest.updatable);
         return new AlgoResponse(result.grid, result.score);
     }
