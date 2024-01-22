@@ -15,17 +15,28 @@ import Phase3.JFX3D.Updatable;
 public class DlxSearch implements Renderable{
     int price = 0;
     Grid grid = new Grid(33,8,5);
-    public Grid dlxSearch(UnitDatabase database) {
+    public Grid dlxSearch(UnitDatabase database, double[] values) {
         Object solver;
         LinkedList<N.RNode> solution_stack;
         if(database.getBlockArrayList().size() > 10) {
-            solver = new CargoX(33, 8, 5, PentominoDatabase.database);
-            solution_stack = ((CargoX) solver).solvePacking();
+            if(values[0] == -1) {
+                solver = new CargoX(33, 8, 5, PentominoDatabase.database);
+                solution_stack = ((CargoX) solver).solvePacking();
+            }
+            else {
+                solver = new CargoXBest(33, 8, 5, PentominoDatabase.database);
+                ((CargoXBest) solver).setTimeLimit(30);
+                solution_stack = ((CargoXBest) solver).solvePacking(new int[]{300, 300, 300}, values);
+            }
+            //if the values are all -1 use this code otherwise use cargoXBest
         }
         else {
             solver = new CargoXBest(33, 8, 5, ParcelDatabase.database);
             ((CargoXBest) solver).setTimeLimit(30);
-            solution_stack = ((CargoXBest) solver).solvePacking();
+            if(values[0] == -1)
+                solution_stack = ((CargoXBest) solver).solvePacking();
+            else
+                solution_stack = ((CargoXBest) solver).solvePacking(new int[]{16, 62, 82}, values);
         }
 
 
@@ -64,7 +75,10 @@ public class DlxSearch implements Renderable{
 
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
-        Grid result = dlxSearch(algoRequest.database);
+        double[] values = new double[3];
+        for (int i = 0; i < algoRequest.values.length; i++)
+            values[2 - i] = algoRequest.values[i];
+        Grid result = dlxSearch(algoRequest.database, values);
         return new AlgoResponse(result.grid, result.score);
     }
 }
