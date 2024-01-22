@@ -1,6 +1,8 @@
 package X;
 
 import Packing.Grid;
+
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -66,6 +68,7 @@ public class DlxSearch implements Renderable{
             }
         }
 
+        this.grid.score = price;
         System.out.println("Price: " + price);
         System.out.println(" ,Percentage of cargo filled: " + (space/(double)total_space));
         System.out.println(" ,Price per block: " + (price/(double)total_space));
@@ -75,6 +78,8 @@ public class DlxSearch implements Renderable{
 
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
+        System.out.println("Supplied values: " + Arrays.toString(algoRequest.values));
+
         double[] values = new double[3];
         for (int i = 0; i < algoRequest.values.length; i++)
             values[2 - i] = algoRequest.values[i];
