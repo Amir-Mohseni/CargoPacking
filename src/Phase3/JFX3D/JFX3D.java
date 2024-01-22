@@ -44,11 +44,13 @@ public class JFX3D extends Application implements Updatable {
     private Constants.Settings.AlgorithmSettings.Algorithm selectedAlgo = Constants.Settings.AlgorithmSettings.Algorithm.RANDOM;
     private Constants.Settings.ParcelSettings.Parcel selectedFilling = Constants.Settings.ParcelSettings.Parcel.BOXES;
     private final Map<Integer, String> colorMap = Settings.Cubes.COLOR_MAP;
+    private Constants.Settings.AlgorithmSettings.CoverageMode coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
     private int[] parcelValues = new int[]{1, 1, 1};
     private int quantity1, quantity2, quantity3;
 
     private int[][][] currentData = new int[0][0][0];
     private int[] positionValues = new int[3];
+    private Label currentScoreLabel;
 
 
     @Override
@@ -174,7 +176,7 @@ public class JFX3D extends Application implements Updatable {
 
         Label scoreLabel = new Label("Score:");
         scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD,12));
-        Label currentScoreLabel = new Label();
+        this.currentScoreLabel = new Label();
 
         ScrollBar scrollBarX = new ScrollBar();
         ScrollBar scrollBarY = new ScrollBar();
@@ -248,7 +250,7 @@ public class JFX3D extends Application implements Updatable {
         Label checkBoxLabel = new Label("Select options:");
         HBox checkBoxGroup = new HBox();
 
-        RadioButton totalCoverageRadioButton = new RadioButton("Total coverage");
+        RadioButton totalCoverageRadioButton = new RadioButton("Maximize coverage");
         RadioButton maximizeScoreRadioButton = new RadioButton("Maximize score");
         ToggleGroup coverageToggleGroup = new ToggleGroup();
         totalCoverageRadioButton.setToggleGroup(coverageToggleGroup);
@@ -285,15 +287,13 @@ public class JFX3D extends Application implements Updatable {
 
         totalCoverageRadioButton.setOnAction(e->{
             if(totalCoverageRadioButton.isSelected()){
-                parcelValues[0] = -1;
-                parcelValues[1] = -1;
-                parcelValues[2] = -1;
+                this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
             }
         });
 
         maximizeScoreRadioButton.setOnAction(e->{
             if(maximizeScoreRadioButton.isSelected()){
-
+                this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_SCORE;
             }
         });
 
@@ -403,7 +403,20 @@ public class JFX3D extends Application implements Updatable {
 
     public void update() {
         try{
-            this.currentData = ((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), parcelValues, this)).data;
+            AlgoResponse algoResponse;
+
+            switch (this.coverageMode){
+                case Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE:
+                    algoResponse = ((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), new int[]{-1, -1, -1}, this));
+                    break;
+
+                default:
+                    algoResponse = ((Renderable) this.selectedAlgo.getRenderable().getConstructor().newInstance()).getData(new AlgoRequest((UnitDatabase) this.selectedFilling.getDatabase().getConstructor().newInstance(), parcelValues, this));
+                    break;
+            }
+
+            this.currentData = algoResponse.data;
+            currentScoreLabel.setText(String.valueOf(algoResponse.score));
             this.setupRender();
             this.draw3D(this.currentData, this.positionValues);
         } catch (InvocationTargetException e) {
