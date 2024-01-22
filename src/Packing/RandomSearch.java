@@ -3,6 +3,7 @@ import Phase3.JFX3D.AlgoRequest;
 import Phase3.JFX3D.AlgoResponse;
 import Phase3.JFX3D.Renderable;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class RandomSearch implements Renderable {
@@ -50,6 +51,7 @@ public class RandomSearch implements Renderable {
 
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
+        System.out.println(Arrays.toString(algoRequest.values));
         Grid result = randomSearch(algoRequest.database);
         return new AlgoResponse(result.grid, result.score);
     }
