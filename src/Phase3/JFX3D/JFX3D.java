@@ -428,17 +428,17 @@ public class JFX3D extends Application implements Updatable {
 
                             // parcel A
                         case 1:
-                            unit_value = BigDecimal.valueOf(parcelValues[id-1]).divide(BigDecimal.valueOf(16), 10, RoundingMode.FLOOR);
+                            unit_value = BigDecimal.valueOf(values[id-1]).divide(BigDecimal.valueOf(16), 10, RoundingMode.FLOOR);
                             break;
 
                         // parcel B
                         case 2:
-                            unit_value = BigDecimal.valueOf(parcelValues[id-1]).divide(BigDecimal.valueOf(24), 10, RoundingMode.FLOOR);
+                            unit_value = BigDecimal.valueOf(values[id-1]).divide(BigDecimal.valueOf(24), 10, RoundingMode.FLOOR);
                             break;
 
                         // parcel C
                         case 3:
-                            unit_value = BigDecimal.valueOf(parcelValues[id-1]).divide(BigDecimal.valueOf(27), 10, RoundingMode.FLOOR);
+                            unit_value = BigDecimal.valueOf(values[id-1]).divide(BigDecimal.valueOf(27), 10, RoundingMode.FLOOR);
                             break;
 
                     }
@@ -465,7 +465,8 @@ public class JFX3D extends Application implements Updatable {
             }
 
             this.currentData = algoResponse.data;
-            int currentScore = this.calculateScore(this.currentData, this.parcelValues);
+//            int currentScore = this.calculateScore(this.currentData, this.parcelValues);
+            int currentScore = algoResponse.score;
             System.out.println("Current score: " + currentScore);
             currentScoreLabel.setText(String.valueOf(currentScore));
             this.setupRender();
@@ -523,7 +524,9 @@ public class JFX3D extends Application implements Updatable {
                     }
                 }
             }
-        } catch (ArrayIndexOutOfBoundsException e){}
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.out.println(e.toString());
+        }
     }
 
     private String getHexColor(Integer id){
