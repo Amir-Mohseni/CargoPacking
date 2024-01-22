@@ -9,13 +9,18 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class GeneticSearch implements Renderable {
-    int populationSize = 1000;
-    int maxGenerations = 100;
+    int populationSize = 5000;
+    int maxGenerations = 50;
     int maxNumberOfEachBlock;
     Gene[] population;
 
-    Grid geneticSearch(UnitDatabase database, Updatable updatable) {
-        this.maxNumberOfEachBlock = 80;
+    Grid geneticSearch(UnitDatabase database) {
+        //If the data is pentominoes, the max number of each block is 264 and otherwise, it is 80
+        if (database.getBlockArrayList().size() > 10)
+            this.maxNumberOfEachBlock = 264;
+        else
+            this.maxNumberOfEachBlock = 80;
+
         population = new Gene[populationSize];
 
         for (int i = 0; i < populationSize; i++)
@@ -29,10 +34,40 @@ public class GeneticSearch implements Renderable {
             //Pick the top 10% of the population
             System.arraycopy(population, 0, newPopulation, 0, populationSize / 100);
 
+            double[] fitnessArr = new double[populationSize];
+            double sum = 0;
+            for (int j = 0; j < populationSize; j++) {
+                fitnessArr[j] = population[j].fitness();
+                sum += fitnessArr[j];
+            }
+
+            //Normalize fitness
+            for (int j = 0; j < populationSize; j++) {
+                fitnessArr[j] /= sum;
+            }
+
             for (int j = populationSize / 100; j < populationSize; j++) {
-                //Parent selection
-                int parentIndex1 = Gene.randomInt(populationSize);
-                int parentIndex2 = Gene.randomInt(populationSize);
+                //Parent selection based on their fitness
+                double random1 = Math.random();
+                double random2 = Math.random();
+
+                int parentIndex1 = populationSize - 1, parentIndex2 = populationSize - 1;
+
+                for (int k = 0; k < populationSize; k++) {
+                    if (random1 < fitnessArr[k]) {
+                        parentIndex1 = k;
+                        break;
+                    }
+                    random1 -= fitnessArr[k];
+                }
+
+                for (int k = 0; k < populationSize; k++) {
+                    if (random2 < fitnessArr[k]) {
+                        parentIndex2 = k;
+                        break;
+                    }
+                    random2 -= fitnessArr[k];
+                }
 
                 Gene parent1 = population[parentIndex1];
                 Gene parent2 = population[parentIndex2];
@@ -47,7 +82,6 @@ public class GeneticSearch implements Renderable {
             sortPopulation();
 
             System.out.println(getBestGene().fitness());
-//            updatable.update(getBestGene().grid.grid);
         }
         return getBestGene().grid;
     }
@@ -61,10 +95,12 @@ public class GeneticSearch implements Renderable {
         return population[0];
     }
 
+    public int getScore() {
+        return getBestGene().fitness();
+    }
+
     @Override
     public AlgoResponse getData(AlgoRequest algoRequest) {
-        System.out.println(Arrays.toString(algoRequest.values));
-        Grid result = geneticSearch(algoRequest.database, algoRequest.updatable);
-        return new AlgoResponse(result.grid, result.score);
+        return new AlgoResponse(this.geneticSearch(algoRequest.database).grid, this.getScore());
     }
 }
