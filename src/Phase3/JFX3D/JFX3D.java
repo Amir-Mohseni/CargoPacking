@@ -51,7 +51,7 @@ public class JFX3D extends Application implements Updatable {
     private int quantity1, quantity2, quantity3;
 
     private int[][][] currentData = new int[0][0][0];
-    private int[] positionValues = new int[3];
+    private int[] positionValues = new int[]{-1, -1, -1};
     private Label currentScoreLabel;
 
 
@@ -163,9 +163,9 @@ public class JFX3D extends Application implements Updatable {
 
         Label valuesLabel = new Label("Values");
         valuesLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
-        TextField parcelValueText1 = new TextField("1");
-        TextField parcelValueText2 = new TextField("1");
-        TextField parcelValueText3 = new TextField("1");
+        TextField parcelValueText1 = new TextField("-1");
+        TextField parcelValueText2 = new TextField("-1");
+        TextField parcelValueText3 = new TextField("-1");
 
         Label quantityLabel = new Label("Quantity");
         quantityLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
@@ -294,12 +294,20 @@ public class JFX3D extends Application implements Updatable {
         totalCoverageRadioButton.setOnAction(e->{
             if(totalCoverageRadioButton.isSelected()){
                 this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_COVERAGE;
+                this.parcelValues = new int[]{-1, -1, 1};
+                parcelValueText1.setText("-1");
+                parcelValueText2.setText("-1");
+                parcelValueText3.setText("-1");
             }
         });
 
         maximizeScoreRadioButton.setOnAction(e->{
             if(maximizeScoreRadioButton.isSelected()){
                 this.coverageMode = Constants.Settings.AlgorithmSettings.CoverageMode.MAXIMUM_SCORE;
+                this.parcelValues = new int[]{3, 4, 5};
+                parcelValueText1.setText("3");
+                parcelValueText2.setText("4");
+                parcelValueText3.setText("5");
             }
         });
 
