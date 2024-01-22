@@ -51,7 +51,19 @@ public class ParcelDatabase {
     */
 
     public static int getValue(int id, int[] values) {
-        return values[id - 1];
+        if(id <= 3) {
+            if (values[id - 1] != -1)
+                return values[id - 1];
+            else {
+                if (id == 1)
+                    return 16;
+                else if (id == 2)
+                    return 24;
+                else
+                    return 27;
+            }
+        }
+        return -1;
     }
 
     /**

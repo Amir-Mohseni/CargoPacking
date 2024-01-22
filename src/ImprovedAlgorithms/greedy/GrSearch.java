@@ -55,8 +55,11 @@ public class GrSearch extends Search implements Renderable {
         Grid grid = new Grid(33, 5, 8);
         UnitDatabase database = algoRequest.database;
         boolean isParcel = true;
-        if (database.getBlockArrayList().size() > 10)
+        if (database.getBlockArrayList().size() > 10) {
             isParcel = false;
+            if(values[0] == -1)
+                values = new int[]{5, 5, 5};
+        }
         Grid result = search(grid, values, isParcel);
         result.score = value;
         return new AlgoResponse(result.grid, result.score);

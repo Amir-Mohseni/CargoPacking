@@ -162,13 +162,13 @@ public class GA implements Renderable {
 
         prevValue = population[0].getFitness();
 
-        if(convCounter == 1000) return true;
+        if(convCounter == 100) return true;
         return false;
     }
 
     public void run() { // ran when thread is started
         if(isParcel) numberOfEachParcel = new int[] {82,62,16};
-        else numberOfEachParcel = new int[] {300,300,300};
+        else numberOfEachParcel = new int[] {100,100,100};
         totalNumberOfParcels = totalNumberOfParcels();
         orderedParcelsArray = generateOrderedParcelsArray();
         runGA();
