@@ -10,6 +10,8 @@ The application gives the user the option to pick the approach and by default, t
 <img width="936" alt="Screenshot 2024-01-26 at 12 01 01 in the afternoon" src="https://github.com/Amir-Mohseni/CargoPacking/assets/51225853/29b1cc6f-83fa-41fe-a64b-a5ebc4e18784">
 
 
+## Running the program
+
 
 
 
