@@ -34,7 +34,8 @@ After running the program, you are able to pick the algorithm that you want to u
 
 You can also change the values of the items by changing the numbers in the values section. For maximizing space utilization, the values of items should be `(-1, -1, -1)`.
 
-![Screenshot 2024-01-26 at 12.02.55 in the afternoon.png](..%2F..%2FDesktop%2FScreenshot%202024-01-26%20at%2012.02.55%20in%20the%20afternoon.png)
+<img width="1335" alt="Screenshot 2024-01-26 at 12 02 55 in the afternoon" src="https://github.com/Amir-Mohseni/CargoPacking/assets/51225853/6a6f79a0-7ddc-48f0-ade3-6fd7145238d8">
+
 
 ## Starting the program
 
