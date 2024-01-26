@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="openjfx.javafx.controls" type="repository">
-    <properties maven-id="org.openjfx:javafx-controls:22-ea+16" />
+    <properties maven-id="org.openjfx:javafx-controls:20" />
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/22-ea+16/javafx-controls-22-ea+16.jar!/" />
-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/22-ea+16/javafx-controls-22-ea+16-mac-aarch64.jar!/" />
-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/22-ea+16/javafx-graphics-22-ea+16.jar!/" />
-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/22-ea+16/javafx-graphics-22-ea+16-mac-aarch64.jar!/" />
-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/22-ea+16/javafx-base-22-ea+16.jar!/" />
-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/22-ea+16/javafx-base-22-ea+16-mac-aarch64.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/20/javafx-controls-20.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/20/javafx-controls-20-mac-aarch64.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/20/javafx-graphics-20.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/20/javafx-graphics-20-mac-aarch64.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/20/javafx-base-20.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/20/javafx-base-20-mac-aarch64.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
